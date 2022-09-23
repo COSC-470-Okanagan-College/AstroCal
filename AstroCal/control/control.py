@@ -17,7 +17,7 @@ def getRiseSet(year, month, day, celestial, status):
     if(status == 'SET'):
         constStatus = swe.CALC_SET
 
-    tjd = swe.julday(year, month, day, 0, swe.GREG_CAL)  # julian day
+    tjd = swe.julday(year, month, day, 7, swe.GREG_CAL)  # julian day
 
     res, tret = swe.rise_trans(tjd, constCel, constStatus,
                                (-119.4960, 49.8880, 342.0), 0, 0, swe.FLG_SWIEPH)  # Coordiantes are hardcoded for now
