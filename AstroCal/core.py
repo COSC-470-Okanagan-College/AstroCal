@@ -8,3 +8,4 @@ def run():
     res = swe.lun_eclipse_when(jd)
     ecltime = swe.revjul(res[1][0])
     print(ecltime)
+
