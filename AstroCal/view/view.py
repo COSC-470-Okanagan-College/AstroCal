@@ -83,7 +83,7 @@ def createMenu():
     print('1. Sun Events')
     print('2. Moon Events')
     print('3. View Month')
-    print('3. exit \n')
+    print('4. exit \n')
     option = int(input('Enter selection: '))
     if option == 1:
         sun()
@@ -143,3 +143,4 @@ def getCurrentMonth():
         print("{:<12} | {:<12}".format("Moonrise", str(local_moon_rise.hour) + ':' + str(local_moon_rise.minute)))
         print("{:<12} | {:<12}".format("Moonset", str(local_moon_set.hour) + ':' + str(local_moon_set.minute)))
         print()
+    createMenu()
