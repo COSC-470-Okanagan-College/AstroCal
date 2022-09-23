@@ -1,19 +1,17 @@
+import model
+import control
+import view
 
 def run():
     hello()
-    fib(20)
+    # print("Sun Rise and Set for Sept, 22")
+    # print(control.getRiseSet(2022, 9, 22, 'SUN', 'RISE'))
+    # print(control.getRiseSet(2022, 9, 22, 'SUN', 'SET'))
+
+    # print("Moon Rise and Set for Sept, 22")
+    # print(control.getRiseSet(2022, 9, 22, 'MOON', 'RISE'))
+    # print(control.getRiseSet(2022, 9, 22, 'MOON', 'SET'))
+    view.createMenu()
 
 def hello():
     print("Hello, moon!")
-
-def fib(n):
-    print(str(1))
-    next_fib(1, 0, 1, n)
-
-
-def next_fib(current, previous, i, limit):
-    i += 1
-    next = (current + previous)
-    print(str(next))
-    if (i < limit):
-        next_fib(next, current, i, limit)
