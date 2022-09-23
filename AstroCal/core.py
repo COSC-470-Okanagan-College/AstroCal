@@ -5,29 +5,38 @@ import pytz
 
 
 def run():
-    moonrise()
+    print("Hi")
 
 
-def moonrise():
-    tjd = swe.julday(2022, 9, 11, 0, swe.GREG_CAL)  # julian day
+def getRiseSet(year, month, day, celestial, status):
+    constCel = swe.SUN
+    if(celestial == 'MOON'):
+        constCel = swe.MOON
 
-    res, tret = swe.rise_trans(tjd, swe.MOON, swe.CALC_RISE,
-                               (-119.4960, 49.8880, 342.0), 0, 0, swe.FLG_SWIEPH)
+    constStatus = swe.CALC_RISE
+    if(status == "SET"):
+        constStatus = swe.CALC_SET
+
+    tjd = swe.julday(year, month, day, 0, swe.GREG_CAL)  # julian day
+
+    res, tret = swe.rise_trans(tjd, constCel, constStatus,
+                               (-119.4960, 49.8880, 342.0), 0, 0, swe.FLG_SWIEPH)  # Coordiantes are hardcoded for now
 
     if (res != 0):
-        print('moonrise not found')
-        sys.exit(1)
+        return None
 
     trise = tret[0]
 
-    y, m, d, h, mi, s = swe.jdut1_to_utc(trise, swe.GREG_CAL)
+    utcTime = swe.jdut1_to_utc(trise, swe.GREG_CAL)
 
-    print('moonrise: %d/%02d/%02d %d:%d UTC' %
-          (y, m, d, h, mi))
+    return utcTime
 
-    timezone = pytz.timezone('PST8PDT')
-    timeUTC = datetime.datetime(y, m, d, h, mi, 0, 0, pytz.UTC)
-    print(timeUTC)
+    # print('moonrise: %d/%02d/%02d %d:%d UTC' %
+    #       (y, m, d, h, mi))
 
-    timeLocal = timeUTC.astimezone(timezone)
-    print(timeLocal)
+    # timezone = pytz.timezone('PST8PDT')
+    # timeUTC = datetime.datetime(y, m, d, h, mi, 0, 0, pytz.UTC)
+    # print(timeUTC)
+
+    # timeLocal = timeUTC.astimezone(timezone)
+    # print(timeLocal)
