@@ -1,19 +1,10 @@
-
+# import the library
 def run():
-    hello()
-    fib(20)
-
-def hello():
-    print("Hello, moon!")
-
-def fib(n):
-    print(str(1))
-    next_fib(1, 0, 1, n)
-
-
-def next_fib(current, previous, i, limit):
-    i += 1
-    next = (current + previous)
-    print(str(next))
-    if (i < limit):
-        next_fib(next, current, i, limit)
+    import swisseph as swe
+    # set the directory path of the ephemeris files
+    swe.set_ephe_path("./swissEphem")
+    # find time of next lunar eclipse
+    jd = swe.julday(2027, 9, 9) # julian day
+    res = swe.lun_eclipse_when(jd)
+    ecltime = swe.revjul(res[1][0])
+    print(ecltime)

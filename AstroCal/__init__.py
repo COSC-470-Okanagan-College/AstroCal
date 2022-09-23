@@ -1,3 +1,3 @@
 from core import run
 
-run()
+run();
