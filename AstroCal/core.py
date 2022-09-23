@@ -25,7 +25,7 @@ def getRiseSet(year, month, day, celestial, status):
     if (res != 0):
         return None
 
-    trise = tret[0]
+    tset = tret[0]
 
     utcTime = swe.jdut1_to_utc(trise, swe.GREG_CAL)
 
