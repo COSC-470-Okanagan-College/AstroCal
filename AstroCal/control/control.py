@@ -38,3 +38,18 @@ def getRiseSet(year, month, day, celestial, status):
 
     # timeLocal = timeUTC.astimezone(timezone)
     # print(timeLocal)
+
+    
+def getWhenSolEclipseLoc(year, month, day):
+    tjdut = swe.julday(year, month, day, 7, swe.GREG_CAL)
+    geopos = [-119.4960,49.8880, 342.0] 
+    retflags,tret,attr = swe.sol_eclipse_when_loc(tjdut,geopos,swe.FLG_SWIEPH,False)
+    
+    #return retflags, tret , attr
+    return retflags
+   # return tret
+    #return attr
+
+      #swe.revjul()
+
+print(getWhenSolEclipseLoc(2022,9,27))
