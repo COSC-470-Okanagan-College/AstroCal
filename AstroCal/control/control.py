@@ -46,8 +46,10 @@ def getWhenSolEclipseLoc(year, month, day):
     retflags,tret,attr = swe.sol_eclipse_when_loc(tjdut,geopos,swe.FLG_SWIEPH,False)
     
     #return retflags, tret , attr
-    return retflags
-   # return tret
+    #return retflags
+    time = swe.jdet_to_utc(tret[0],swe.GREG_CAL)
+    #print("The eclipse occured on" + str(time) + "\n")
+    return tret
     #return attr
 
       #swe.revjul()
