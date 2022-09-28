@@ -1,4 +1,5 @@
 import swisseph as swe
+import unittest
 
 
 def test_swe():
@@ -53,3 +54,13 @@ def getWhenSolEclipseLoc(year, month, day):
      
 
 print(getWhenSolEclipseLoc(2022,9,27))
+
+class TestEclipse(unittest.TestCase):
+    def test_SolEcl_When(self):
+        self.assertEqual(getWhenSolEclipseLoc(2022,9,27),(2023, 10, 14, 15, 9, 15.699218809604645),"Test Fail")
+    
+        
+
+
+if __name__ == '__main__':
+    unittest.main()
