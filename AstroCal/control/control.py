@@ -45,13 +45,11 @@ def getWhenSolEclipseLoc(year, month, day):
     geopos = [-119.4960,49.8880, 342.0] 
     retflags,tret,attr = swe.sol_eclipse_when_loc(tjdut,geopos,swe.FLG_SWIEPH,False)
     
-    #return retflags, tret , attr
-    #return retflags
-    time = swe.jdet_to_utc(tret[0],swe.GREG_CAL)
-    #print("The eclipse occured on" + str(time) + "\n")
-    return tret
-    #return attr
-
-      #swe.revjul()
+    time = swe.jdet_to_utc(tret[1],swe.GREG_CAL)
+    print("The eclipse occured on" + str(time) + "\n")
+    
+    return time
+#TODO complete the unit test for peer review
+     
 
 print(getWhenSolEclipseLoc(2022,9,27))
