@@ -47,7 +47,7 @@ def getWhenSolEclipseLoc(year, month, day):
     retflags,tret,attr = swe.sol_eclipse_when_loc(tjdut,geopos,swe.FLG_SWIEPH,False)
     
     time = swe.jdet_to_utc(tret[1],swe.GREG_CAL)
-    print("The eclipse occured on" + str(time) + "\n")
+    #print("The eclipse occured on" + str(time) + "\n year,month,date,hour,minute,seconds")
     
     return time
 #TODO complete the unit test for peer review
@@ -55,12 +55,3 @@ def getWhenSolEclipseLoc(year, month, day):
 
 print(getWhenSolEclipseLoc(2022,9,27))
 
-class TestEclipse(unittest.TestCase):
-    def test_SolEcl_When(self):
-        self.assertEqual(getWhenSolEclipseLoc(2022,9,27),(2023, 10, 14, 15, 9, 15.699218809604645),"Test Fail")
-    
-        
-
-
-if __name__ == '__main__':
-    unittest.main()
