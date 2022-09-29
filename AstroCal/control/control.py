@@ -1,5 +1,4 @@
 import swisseph as swe
-import unittest
 
 
 def test_swe():
