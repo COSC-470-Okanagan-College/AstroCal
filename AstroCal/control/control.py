@@ -46,14 +46,12 @@ def getRiseSet(year, month, day, celestial, status):
     # print(timeLocal)
 
 def getDateOfNextFullMoon_UTC(year, month, day):
-<<<<<<< HEAD
     """Return the date of the next full moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a fullmoon illumination level (99%)
     Checks for brightest hour and minute as well to correct for UTC time conversion."""
-=======
+    
     #Converts UTC time into julian day number
->>>>>>> 270e5e4f07d2759ea70b8f70a6b09dbaf03fbf2e
     tjd = swe.julday(year, month, day, 0, swe.GREG_CAL)
     #Get the illumination of the moon (variable: illum) of the starting day to check if it is a full moon
     res = swe.pheno_ut(tjd, swe.MOON)
@@ -105,7 +103,6 @@ def getDateOfNextFullMoon_UTC(year, month, day):
 
 
 def getDaysTillFullMoon(year, month, day, timezone):
-<<<<<<< HEAD
     """Gets days till next full moon based on entered date and timezone offset """
     year_utc, month_utc, day_utc, _, _, _ = swe.utc_time_zone(year, month, day, 0, 0, 0, timezone)
     #Returns the UTC time and date of the next full moon as a tuple
@@ -113,23 +110,7 @@ def getDaysTillFullMoon(year, month, day, timezone):
     #Converts the full moon UTC date to the local timezone
     local_time = swe.utc_time_zone(fmoon_year_utc, fmoon_month_utc, fmoon_day_utc, fmoon_hours_utc, fmoon_minutes_utc, 0, -timezone)
     #Subtract the next full moon date from the current day to retrieve the days till.
-=======
-    #Convert Local time into UTC
-    utc_time = swe.utc_time_zone(year, month, day, 0, 0, 0, timezone)
-    year_utc = utc_time[0]
-    month_utc = utc_time[1]
-    day_utc = utc_time[2]
-    #Pass UTC Time into the which return the date of the next full moon down to the minute
-    date_utc = getDateOfNextFullMoon_UTC(year_utc, month_utc, day_utc)
-    year_utc = date_utc[0]
-    month_utc = date_utc[1]
-    day_utc = date_utc[2]
-    hours_utc = date_utc[3]
-    minutes_utc = date_utc[4]
-    #Convert UTC time back into local time
-    local_time = swe.utc_time_zone(year_utc, month_utc, day_utc, hours_utc, minutes_utc, 0, -timezone)
-    #Convert local start and local time of next full moon into datetime objects. Subtract time to get the difference in days
->>>>>>> 270e5e4f07d2759ea70b8f70a6b09dbaf03fbf2e
+
     startDate = datetime(year, month, day)
     endDate = datetime(local_time[0], local_time[1], local_time[2])
     diff = abs(endDate-startDate).days
@@ -145,5 +126,36 @@ def getWhenSolEclipseLoc(year, month, day):
     #print("The eclipse occured on" + str(time) + "\n year,month,date,hour,minute,seconds")
     
     return time
-test_swe()
      
+
+#calculates the moons current illumination
+def getMoonStatusHelper(year, month, day):
+	jd = swe.julday(year, month, day)
+	se_moon = 1
+	attr = 	swe.pheno_ut(jd, se_moon, 1)
+	moon_percent = (attr[1] * 100)
+	#output = str(output) + "%"
+	return moon_percent
+
+#uses getMoonStatusHelper to display current phases of the moon
+def getMoonStatus():
+    now = datetime.now()
+    attr = getMoonStatusHelper(now.year, now.month, now.day)
+    next_day_percent = getMoonStatusHelper(now.year, now.month, now.day+1)
+    moon_status = ""
+    if round(attr) < 49:
+        moon_status = " Crescent"
+    elif round(attr) > 51:
+        moon_status = " Cibbous"
+
+    if attr < next_day_percent:
+        print("Waxing" + moon_status)
+    elif attr > next_day_percent:
+        print("Wanning" + moon_status)
+    elif round(attr) == 100:
+        print("Full Moon")
+    elif round(attr) == 0:
+        print("New Moon")
+
+    moon_percent = round(attr)
+    print("Illumination " + str(moon_percent) + "%")
