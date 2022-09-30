@@ -1,86 +1,75 @@
-import tkinter
-from tkinter import *
+from tkinter import*
+from datetime import datetime
+import control
+import pytz
+import sys
 
-class mainApp(tkinter.Tk):
+#creating tkinter window
+window = Tk()
+window.title = ("Astro Calendar")
+window.geometry("400x400")
 
-    #function for MainApp (idk why we need it we just do)
-    def __init__(self, *args, **kwargs):
+#app label
+header = Label(
+    text="✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ",
+    font = 10,
+)
+header.pack()
 
-        #function for class app (again idk why but just go with it)
-        tkinter.Tk.__init__(self, *args, **kwargs)
+today = datetime.now().strftime("%B-%d-%Y  %H:%M \n")
+todayLabel = Label(
+    text = today,
+    font = 5,
+)
+todayLabel.pack()
 
-        #create a container
-        container = tkinter.Frame(self)
-        container.pack(side = "top", fill = "both", expand = True)
-        container.grid_rowconfigure(0, weight = 1)
-        container.grid_columnconfigure(0, weight = 1)
-
-        #initialize frame as empty array
-        self.frames = {}
-
-        #iterating trhough tuple made of differnet page frames
-        for f in (MainPage, Sun, Moon):
-            frame = f(container, self)
-            #initialize frame of the object from Mainpage, sun, moon. for the loop
-            self.frames[f] = frame
-            frame.grid(row = 0, column = 0, sticky="nsew")#north south east west
-        self.show_frame(MainPage)
+def sunInformation():
+    now = datetime.now()
+    sun_rise = control.getRiseSet(now.year, now.month, now.day, 'SUN', 'RISE')
+    local_rise = utc_hack(sun_rise)
+    sun_set = control.getRiseSet(now.year, now.month, now.day, 'SUN', 'SET')
+    local_set = utc_hack(sun_set)
     
-    #display current frame passed in
-    def show_frame(self, cont):
-        frame = self.frames[cont]
-        frame.tkraise()
+    sunInfo = 'Sun will Rise: ' + str(local_rise.hour) + ':' + str(local_rise.minute) + '\n Sun will Set : ' + str(local_set.hour) + ':' + str(local_set.minute)
+    display.config(text = sunInfo)
 
-#main page frame
-class MainPage(tkinter.Frame):
-    def __init__(self, parent, controller):
-        tkinter.Frame.__init__(self, parent)
+def utc_hack(date_tup):
+    timezone = pytz.timezone('PST8PDT')
+    timeUTC = datetime(date_tup[0], date_tup[1], date_tup[2], date_tup[3], date_tup[4], 0, 0, pytz.UTC)
+    timeLocal = timeUTC.astimezone(timezone)
+    return timeLocal
 
-        #label displaying current frame
-        label = tkinter.Label(self, text ="Main Menu")
-        #grid
-        label.grid(row = 0, column = 4, padx = 10, pady = 10)
-        
-        #button to launch sun frame
-        sunButton = tkinter.Button(self, text ="Sun Information",
-        command = lambda : controller.show_frame(Sun))
+#sun menu options
+sunFrame = LabelFrame(window, text="Sun Options", padx = 40, pady = 20)
+sunFrame.pack(padx = 10, pady = 10)
+sToday = Button(sunFrame, text = "View Today", command = sunInformation, padx = 5, pady = 5)
+sToday.grid(row = 0, column = 0)
+sMonth = Button(sunFrame, text = "View Month", padx = 5, pady = 5)
+sMonth.grid(row = 0, column = 2)
 
-        sunButton.grid(row = 1, column = 1, padx = 10, pady = 10)
-        
-        #button to launch mooon frame
-        moonButton = tkinter.Button(self, text="Moon Information",
-        command = lambda : controller.show_frame(Moon))
-        moonButton.grid(row = 2, column = 1, padx = 10, pady = 10)
+def moonInformation():
+    now = datetime.now()
+    moon_rise = control.getRiseSet(now.year, now.month, now.day, 'MOON', 'RISE')
+    local_rise = utc_hack(moon_rise)
+    moon_set = control.getRiseSet(now.year, now.month, now.day, 'MOON', 'SET')
+    local_set = utc_hack(moon_set)
+    
+    moonInfo = 'Moon will Rise: ' + str(local_rise.hour) + ':' + str(local_rise.minute) + '\n Moon will Set : ' + str(local_set.hour) + ':' + str(local_set.minute),
+    display.config(text = moonInfo)
 
-#Sun page frame
-class Sun(tkinter.Frame):
-    def __init__(self, parent, controller):
-        tkinter.Frame.__init__(self, parent)
+#moon menu options
+moonFrame = LabelFrame(window, text="Moon Options", padx = 40, pady = 20)
+moonFrame.pack(padx = 10, pady = 10)
+mToday = Button(moonFrame, text = "View Today", command = moonInformation, padx = 5, pady = 5)
+mToday.grid(row = 0, column = 0)
+mMonth = Button(moonFrame, text = "View Month", padx = 5, pady = 5)
+mMonth.grid(row = 0, column = 2)
 
-        #label displaying current frame
-        label = tkinter.Label(self, text ="Sun Menu")
-        #grid
-        label.grid(row = 0, column = 4, padx = 10, pady = 10)
-
-        #button to go back to menu frame
-        menuButton = tkinter.Button(self, text="Main Menu",
-        command = lambda : controller.show_frame(MainPage))
-        menuButton.grid(row = 2, column = 1, padx = 10, pady = 10)
-
-#Moon page frame
-class Moon(tkinter.Frame):
-    def __init__(self, parent, controller):
-        tkinter.Frame.__init__(self, parent)
-
-        #label displaying current frame
-        label = tkinter.Label(self, text ="Moon Menu")
-        #grid
-        label.grid(row = 0, column = 4, padx = 10, pady = 10)
-
-        #button to go back to menu frame
-        menuButton = tkinter.Button(self, text="Main Menu",
-        command = lambda : controller.show_frame(MainPage))
-        menuButton.grid(row = 2, column = 1, padx = 10, pady = 10)
-
-
-
+#output
+outputFrame = LabelFrame(window, text="Output", padx = 40, pady = 20)
+outputFrame.pack()
+display = Label(
+    outputFrame,
+    text=" ",
+)
+display.pack()
