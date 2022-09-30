@@ -1,4 +1,4 @@
-from AstroCal.view.tkGUI_Launch import mainApp
+from view.tkGUI_Launch import mainApp
 import sys
 
 def run():
