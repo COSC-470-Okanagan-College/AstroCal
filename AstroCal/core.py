@@ -1,6 +1,5 @@
-import model
-import control
 import view
+import sys
 
 def run():
     hello()
@@ -20,3 +19,11 @@ def run():
 
 def hello():
     print("Hello, moon!")
+
+
+if __name__ == "__main__":
+    # Check for minimum version of Python (3.8)
+    MIN_PYTHON = (3, 8)
+    if sys.version_info < MIN_PYTHON:
+        sys.exit("Python %s.%s or later is required.\n" % MIN_PYTHON)
+    run()
