@@ -49,8 +49,7 @@ def getWhenSolEclipseLoc(year, month, day):
     #print("The eclipse occured on" + str(time) + "\n year,month,date,hour,minute,seconds")
     
     return time
-#TODO complete the unit test for peer review
+
      
 
-print(getWhenSolEclipseLoc(2022,9,27))
 
