@@ -54,3 +54,10 @@ def getWhenSolEclipseLoc(year, month, day):
 
 print(getWhenSolEclipseLoc(2022,9,27))
 
+def getMoonStatus(year, month, day):
+	jd = swe.julday(year, month, day)
+	se_moon = 1
+	attr = 	swe.pheno_ut(jd, se_moon, 1)
+	moon_percent = (attr[1] * 100)
+	#output = str(output) + "%"
+	return moon_percent

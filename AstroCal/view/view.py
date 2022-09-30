@@ -46,7 +46,8 @@ def moon():
     print('Moon Events')
     print('1. View Today')
     print('2. View Full Month')
-    print('3. Back \n')
+    print('3. View Moon Status')
+    print('4. Back \n')
     option = int(input('Enter selection: '))
     if option == 1:
         getCurrentdate()
@@ -62,6 +63,27 @@ def moon():
         moon() 
         #call month function
     elif option == 3:
+        now = datetime.now()
+        attr = control.getMoonStatus(now.year, now.month, now.day)
+        next_day_percent = control.getMoonStatus(now.year, now.month, now.day+1)
+        moon_status = ""
+        if round(attr) < 49:
+            moon_status = " Crescent"
+        elif round(attr) > 51:
+            moon_status = " Cibbous"
+
+        if attr < next_day_percent:
+            print("Waxing" + moon_status)
+        elif attr > next_day_percent:
+            print("Wanning" + moon_status)
+        elif round(attr) == 100:
+            print("Full Moon")
+        elif round(attr) == 0:
+            print("New Moon")
+
+        moon_percent = round(attr)
+        print("Illumination " + str(moon_percent) + "%")
+    elif option == 4:
         createMenu()
     else:
         print('error not an option')
