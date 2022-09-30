@@ -1,5 +1,5 @@
 import swisseph as swe
-
+from datetime import datetime
 
 def test_swe():
     jd = swe.julday(2007, 3, 3)
@@ -54,10 +54,34 @@ def getWhenSolEclipseLoc(year, month, day):
 
 print(getWhenSolEclipseLoc(2022,9,27))
 
-def getMoonStatus(year, month, day):
+#calculates the moons current illumination
+def getMoonStatusHelper(year, month, day):
 	jd = swe.julday(year, month, day)
 	se_moon = 1
 	attr = 	swe.pheno_ut(jd, se_moon, 1)
 	moon_percent = (attr[1] * 100)
 	#output = str(output) + "%"
 	return moon_percent
+
+#uses getMoonStatusHelper to display current phases of the moon
+def getMoonStatus():
+    now = datetime.now()
+    attr = getMoonStatusHelper(now.year, now.month, now.day)
+    next_day_percent = getMoonStatusHelper(now.year, now.month, now.day+1)
+    moon_status = ""
+    if round(attr) < 49:
+        moon_status = " Crescent"
+    elif round(attr) > 51:
+        moon_status = " Cibbous"
+
+    if attr < next_day_percent:
+        print("Waxing" + moon_status)
+    elif attr > next_day_percent:
+        print("Wanning" + moon_status)
+    elif round(attr) == 100:
+        print("Full Moon")
+    elif round(attr) == 0:
+        print("New Moon")
+
+    moon_percent = round(attr)
+    print("Illumination " + str(moon_percent) + "%")
