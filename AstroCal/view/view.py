@@ -46,7 +46,8 @@ def moon():
     print('Moon Events')
     print('1. View Today')
     print('2. View Full Month')
-    print('3. Back \n')
+    print('3. View Moon Status')
+    print('4. Back \n')
     option = int(input('Enter selection: '))
     if option == 1:
         getCurrentdate()
@@ -62,6 +63,10 @@ def moon():
         moon() 
         #call month function
     elif option == 3:
+        
+        control.getMoonStatus()
+        
+    elif option == 4:
         createMenu()
     else:
         print('error not an option')
