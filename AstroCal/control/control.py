@@ -7,11 +7,11 @@ def test_swe():
     #res = swe.lun_eclipse_when(jd)
     #ecltime = swe.revjul(res[1][0])
     # print(ecltime)
-    #print(getDaysTillnextFullMoon(2022, 10, 12))
+    #print(getDaysTillFullMoon(2022, 10, 12))
     #Test for days till full moon
-    #for i in range(1,13):
-    #    #print(getDateOfNextFullMoon_UTC(2022, i, 1))
-    #    print(str(getDaysTillFullMoon(2022, i, 1, -7)))
+    for i in range(1,13):
+        #print(getDateOfNextFullMoon_UTC(2022, i, 1))
+        print(str(getDaysTillFullMoon(2022, i, 1, -7)))
 
 
 def getRiseSet(year, month, day, celestial, status):
@@ -45,12 +45,16 @@ def getRiseSet(year, month, day, celestial, status):
     # timeLocal = timeUTC.astimezone(timezone)
     # print(timeLocal)
 
-#Return the date of the next full, input/output UTC time
 def getDateOfNextFullMoon_UTC(year, month, day):
+    """Return the date of the next full moon.
+    input/output in UTC time.
+    Checks for the first day meeting the requirement for a fullmoon illumination level (99%)
+    Checks for brightest hour and minute as well to correct for UTC time conversion."""
     tjd = swe.julday(year, month, day, 0, swe.GREG_CAL)
     res = swe.pheno_ut(tjd, swe.MOON)
     illum = res[1]
     daysCount = 0
+    #Find the first day that meets the illumination requirement.
     while(round(illum,3) < 0.990):
         daysCount += 1
         tjd = swe.julday(year, month, day+daysCount, 0, swe.GREG_CAL)
@@ -61,6 +65,7 @@ def getDateOfNextFullMoon_UTC(year, month, day):
     max = swe.pheno_ut(tjd, swe.MOON)[1]
     temp = max
     hour = 0.0
+    #Find the brightest hour in that day
     while(temp > max and hour < 23):
         hour += 1.0
         tjd = swe.julday(year, month, day+daysCount, hour, swe.GREG_CAL)
@@ -72,6 +77,7 @@ def getDateOfNextFullMoon_UTC(year, month, day):
     max = swe.pheno_ut(tjd, swe.MOON)[1]
     temp = max
     minute = 0.0
+    #Find the brightest minute
     while(temp >= max):
         minute += 0.017
         tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
@@ -84,19 +90,15 @@ def getDateOfNextFullMoon_UTC(year, month, day):
     return swe.jdut1_to_utc(tjd, swe.GREG_CAL)
 
 
-#get days till next full moon based on entered date and timezone offset
+
 def getDaysTillFullMoon(year, month, day, timezone):
-    utc_time = swe.utc_time_zone(year, month, day, 0, 0, 0, timezone)
-    year_utc = utc_time[0]
-    month_utc = utc_time[1]
-    day_utc = utc_time[2]
-    date_utc = getDateOfNextFullMoon_UTC(year_utc, month_utc, day_utc)
-    year_utc = date_utc[0]
-    month_utc = date_utc[1]
-    day_utc = date_utc[2]
-    hours_utc = date_utc[3]
-    minutes_utc = date_utc[4]
-    local_time = swe.utc_time_zone(year_utc, month_utc, day_utc, hours_utc, minutes_utc, 0, -timezone)
+    """Gets days till next full moon based on entered date and timezone offset """
+    year_utc, month_utc, day_utc, _, _, _ = swe.utc_time_zone(year, month, day, 0, 0, 0, timezone)
+    #Returns the UTC time and date of the next full moon as a tuple
+    fmoon_year_utc,fmoon_month_utc,fmoon_day_utc,fmoon_hours_utc,fmoon_minutes_utc,_ = getDateOfNextFullMoon_UTC(year_utc, month_utc, day_utc)
+    #Converts the full moon UTC date to the local timezone
+    local_time = swe.utc_time_zone(fmoon_year_utc, fmoon_month_utc, fmoon_day_utc, fmoon_hours_utc, fmoon_minutes_utc, 0, -timezone)
+    #Subtract the next full moon date from the current day to retrieve the days till.
     startDate = datetime(year, month, day)
     endDate = datetime(local_time[0], local_time[1], local_time[2])
     diff = abs(endDate-startDate).days
@@ -111,7 +113,7 @@ def getWhenSolEclipseLoc(year, month, day):
     #print("The eclipse occured on" + str(time) + "\n year,month,date,hour,minute,seconds")
     
     return time
-
+test_swe()
      
 
 
