@@ -2,7 +2,7 @@
 
 #Imports
 from datetime import datetime
-import control
+from control import control
 import pytz
 import sys
 
