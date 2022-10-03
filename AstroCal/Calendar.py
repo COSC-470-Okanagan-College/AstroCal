@@ -7,12 +7,12 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.gridlayout import GridLayout
 from datetime import datetime
 
-dm = datetime.now().month
-#startday = dm.isoweekday()
-#if startday == 7:
-#    startday = 0
-#else:
-#    startday += 1
+date = datetime.now()
+dm = date.month
+firstday = date.replace(day=1)
+startday = firstday.isoweekday()
+if startday == 7:
+    startday = 0
 def daysInMonth():
     if dm in [1,3,5,7,8,10,12]:
         return 31
@@ -29,10 +29,14 @@ class CalGrid(GridLayout):
 
 class CalendarApp(App):
     def build(self):
-        for x in range(1,daysInMonth()):
-            btn = self.root.ids[x]
-            btn.text = str(x)
-        return CalGrid()
+        cg = CalGrid()
+        cg.ids['month_label'].text = date.strftime("%B %Y")
+        buttons = list(cg.ids.keys())
+        y = startday
+        for x in range(1, daysInMonth()):
+            cg.ids[buttons[y + 1]].text = str(x)
+            y += 1
+        return cg
         
     
 if __name__ == "__main__":
