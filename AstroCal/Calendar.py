@@ -26,7 +26,6 @@ class CalGrid(GridLayout):
 
 class CalendarApp(App):
     def build(self):
-        print(daysInMonth())
         cg = CalGrid()
         cg.ids['month_label'].text = date.strftime("%B %Y")
         buttons = list(cg.ids.keys())
@@ -35,7 +34,6 @@ class CalendarApp(App):
             cg.ids[buttons[y + 1]].text = str(x)
             y += 1
         return cg
-        
-    
+
 if __name__ == "__main__":
     CalendarApp().run()
