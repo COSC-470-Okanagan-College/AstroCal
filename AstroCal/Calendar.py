@@ -4,18 +4,18 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from datetime import datetime
 
-date = datetime.now()
-firstday = date.replace(day=1)
+dates = datetime.now()
+firstday = dates.replace(day=1)
 startday = firstday.isoweekday()
 if startday == 7:
     startday = 0
 def daysInMonth():
-    if date.month in [1,3,5,7,8,10,12]:
+    if dates.month in [1,3,5,7,8,10,12]:
         return 31
-    elif date.month in [4,6,9,11]:
+    elif dates.month in [4,6,9,11]:
         return 30
-    elif date.month == 2:
-        yr = date.year
+    elif dates.month == 2:
+        yr = dates.year
         if yr % 4 == 0 and (yr % 100 != 0 or yr % 400 == 0):
             return 29
         else:
@@ -26,7 +26,7 @@ class CalGrid(GridLayout):
 class CalendarApp(App):
     def build(self):
         cg = CalGrid()
-        cg.ids['month_label'].text = date.strftime("%B %Y")
+        cg.ids['month_label'].text = dates.strftime("%B %Y")
         buttons = list(cg.ids.keys())
         y = startday
         for x in range(1, daysInMonth() + 1):
