@@ -2,6 +2,9 @@ from kivy.app import App
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.floatlayout import FloatLayout
+from kivy.uix.popup import Popup
 from datetime import datetime
 
 dates = datetime.now()
@@ -23,6 +26,9 @@ def daysInMonth():
 class CalGrid(GridLayout):
     pass
 
+class DayMode(FloatLayout):
+    pass
+
 class CalendarApp(App):
     def build(self):
         cg = CalGrid()
@@ -33,6 +39,18 @@ class CalendarApp(App):
             cg.ids[buttons[y + 1]].text = str(x)
             y += 1
         return cg
+    
+    def showDayMode(self):
+        dayInfo = DayMode()
+        #location
+        #dayInfo.ids['l1'].text = 
+        # moon and sun info
+        #dayInfo.ids['sr1'].text = 
+        #dayInfo.ids['ss1'].text = 
+        #dayInfo.ids['mr1'].text = 
+        #dayInfo.ids['ms1'].text = 
+        popupWindow = Popup(title="Popup Window", content=dayInfo, size_hint=(1,1),size=(400,400))
+        popupWindow.open()
 
 if __name__ == "__main__":
     CalendarApp().run()
