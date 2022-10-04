@@ -170,3 +170,16 @@ def getMoonStatus():
 
     moon_percent = round(attr)
     print("Illumination " + str(moon_percent) + "%")
+
+
+def getVariableDayLength(year, month, day, amountOfDays):
+    
+    dayLightHours = ()
+
+    for i in range(0,amountOfDays): 
+        daySunRise = getRiseSet(year, month, day + amountOfDays, 'SUN', 'RISE')
+        daySunSet = getRiseSet(year, month, day + amountOfDays, 'SUN', 'SET')
+        diffHours = abs(daySunSet-daySunRise).hours
+        diffMinutes = (abs(daySunSet-daySunRise).minutes) % 60
+        
+
