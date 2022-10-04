@@ -1,4 +1,4 @@
-from AstroCal.view.tkGUI_Launch import mainApp
+import view
 import sys
 
 def run():
@@ -10,17 +10,14 @@ def run():
     # print("Moon Rise and Set for Sept, 22")
     # print(control.getRiseSet(2022, 9, 22, 'MOON', 'RISE'))
     # print(control.getRiseSet(2022, 9, 22, 'MOON', 'SET'))
-<<<<<<< HEAD
-    
     view.createMenu()
-=======
     app = mainApp()
+    app = view.tkGUI_Launch
     app.mainloop()
     #view.createMenu()
     #runs everything
     #app = view.mainApp()
     #app.mainloop()
->>>>>>> 0b56a1d088fe4aa8a914c3049df38ce2be38e7c4
 
 def hello():
     print("Hello, moon!")
