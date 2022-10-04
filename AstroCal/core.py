@@ -1,24 +1,14 @@
-import view
+import AstroCal.view.console_output as console_output
 import sys
 
+
 def run():
-    hello()
-    # print("Sun Rise and Set for Sept, 22")
-    # print(control.getRiseSet(2022, 9, 22, 'SUN', 'RISE'))
-    # print(control.getRiseSet(2022, 9, 22, 'SUN', 'SET'))
+    # Runs UI
+    #app = view.tkGUI_Launch
+    # app.mainloop()
 
-    # print("Moon Rise and Set for Sept, 22")
-    # print(control.getRiseSet(2022, 9, 22, 'MOON', 'RISE'))
-    # print(control.getRiseSet(2022, 9, 22, 'MOON', 'SET'))
-    app = view.tkGUI_Launch
-    app.mainloop()
-    #view.createMenu()
-    #runs everything
-    #app = view.mainApp()
-    #app.mainloop()
-
-def hello():
-    print("Hello, moon!")
+    # Runs Console
+    console_output.main_menu()
 
 
 if __name__ == "__main__":
