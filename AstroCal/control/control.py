@@ -6,10 +6,14 @@ from datetime import datetime
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
 # celestial: SUN, MOON
 # event: RISE, SET
-def celestial_rise_or_set(celestial, event):
-    now = datetime.now()
-    event_result = getRiseSet(
-        now.year, now.month, now.day, celestial, event)
+# year, month, day of when the event will happen, can be left out of parameters to get current day
+def celestial_rise_or_set(celestial, event, year=0, month=0, day=0):
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+    event_result = getRiseSet(year, month, day, celestial, event)
     time_unformatted = utc_hack(event_result)
     return format_24hour_time_output(time_unformatted)
 
