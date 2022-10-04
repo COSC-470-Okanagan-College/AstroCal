@@ -1,4 +1,4 @@
-from view.tkGUI_Launch import mainApp
+import view
 import sys
 
 def run():
@@ -10,7 +10,7 @@ def run():
     # print("Moon Rise and Set for Sept, 22")
     # print(control.getRiseSet(2022, 9, 22, 'MOON', 'RISE'))
     # print(control.getRiseSet(2022, 9, 22, 'MOON', 'SET'))
-    app = mainApp()
+    app = view.tkGUI_Launch
     app.mainloop()
     #view.createMenu()
     #runs everything
