@@ -15,10 +15,10 @@ def celestial_rise_or_set(celestial, event, year=0, month=0, day=0):
         day = now.day
     event_result = getRiseSet(year, month, day, celestial, event)
     time_unformatted = utc_hack(event_result)
-    return format_24hour_time_output(time_unformatted)
+    return format_24hour_time_output(time_unformatted) + " Day: " + str(time_unformatted.day)
 
 
-# Not sure what this does, but I think it turns UTC to PST
+# Turns tuplet into usable DateTime object
 def utc_hack(date_tup):
     timezone = pytz.timezone('PST8PDT')
     timeUTC = datetime(date_tup[0], date_tup[1], date_tup[2],
@@ -139,15 +139,38 @@ def getDaysTillFullMoon(year, month, day, timezone):
     return diff
 
 
-def getWhenSolEclipseLoc(year, month, day):
+# Gets array of data relating to time of solar eclipse
+def getWhenSolEclipseLoc(year=0, month=0, day=0):
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
     tjdut = swe.julday(year, month, day, 7, swe.GREG_CAL)
     geopos = [-119.4960, 49.8880, 342.0]
     retflags, tret, attr = swe.sol_eclipse_when_loc(
         tjdut, geopos, swe.FLG_SWIEPH, False)
 
     time = swe.jdet_to_utc(tret[1], swe.GREG_CAL)
+    time_formatted = utc_hack(time)
+    return str(time_formatted)
 
-    return time
+
+# Gets array of data relating to time of Lunar eclipse
+def getWhenLunEclipseLoc(year=0, month=0, day=0):
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+    tjdut = swe.julday(year, month, day, 7, swe.GREG_CAL)
+    geopos = [-119.4960, 49.8880, 342.0]
+    retflags, tret, attr = swe.lun_eclipse_when_loc(
+        tjdut, geopos, swe.FLG_SWIEPH, False)
+
+    time = swe.jdet_to_utc(tret[6], swe.GREG_CAL)
+    time_formatted = utc_hack(time)
+    return str(time_formatted)
 
 
 # calculates the moons current illumination
@@ -156,7 +179,6 @@ def getMoonStatusHelper(year, month, day):
     se_moon = 1
     attr = swe.pheno_ut(jd, se_moon, 1)
     moon_percent = (attr[1] * 100)
-    #output = str(output) + "%"
     return moon_percent
 
 

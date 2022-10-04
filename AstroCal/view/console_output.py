@@ -33,7 +33,7 @@ def main_menu():
 def sun_menu():
     print('Sun Events')
     print('1. View Today')
-    print('2. View Full Month')
+    print('2. Solar Eclipse')
     print('3. Back \n')
     option = int(input('Enter selection: '))
     if option == 1:
@@ -43,7 +43,7 @@ def sun_menu():
         # call function name for moon set
         print('Sun will Set : ' + control.celestial_rise_or_set('SUN', 'SET'))
     elif option == 2:
-        print()  # call month function
+        print("Solar Eclipse:", control.getWhenSolEclipseLoc())
     elif option == 3:
         main_menu()
     else:
@@ -57,7 +57,7 @@ def sun_menu():
 def moon_menu():
     print('Moon Events')
     print('1. View Today')
-    print('2. View Full Month')
+    print('2. Lunar Eclipse')
     print('3. View Moon Status')
     print('4. Back \n')
     option = int(input('Enter selection: '))
@@ -68,8 +68,7 @@ def moon_menu():
         # call function name for moon set
         print('Moon will Set : ' + control.celestial_rise_or_set('MOON', 'SET'))
     elif option == 2:
-        moon_menu()
-        # call month function
+        print("Lunar Eclipse:", control.getWhenLunEclipseLoc())
     elif option == 3:
         moon_status_result = control.getMoonStatus()
         print(moon_status_result[0])
