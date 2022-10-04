@@ -170,3 +170,61 @@ def getMoonStatus():
 
     moon_percent = round(attr)
     print("Illumination " + str(moon_percent) + "%")
+
+def getDateOfNextNewMoon(year, month, day):
+    """Return the date of the next new moon.
+    input/output in UTC time.
+    Checks for the first day meeting the requirement for a new moon illumination level (~0%)
+    Checks for dimmest hour and minute as well to correct for UTC time conversion."""
+    
+    #Converts UTC time into julian day number
+    tjd = swe.julday(year, month, day, 0, swe.GREG_CAL)
+    #Get the illumination of the moon (variable: illum) of the starting day to check if it is a new moon
+    res = swe.pheno_ut(tjd, swe.MOON)
+    illum = res[1]
+
+    #Compare the illumintation of the moon to a threshold (0.005) and get the first day
+    #since the starting day where the threshold is met, this indicates new moon
+    daysCount = 0
+    #Find the first day that meets the illumination requirement.
+    while(round(illum,3) > 0.005):
+        daysCount += 1
+        tjd = swe.julday(year, month, day+daysCount, 0, swe.GREG_CAL)
+        res = swe.pheno_ut(tjd, swe.MOON)
+        illum = res[1]
+        
+    
+    #New moon happens at a speciifc hour and minute during the day
+    #We get this specific to make sure the timezone conversions will be accurate
+    #Note: the mintues seem to be a little off when c0mpared to online sources
+
+    #Get the hour with the dimmest illumination
+    tjd = swe.julday(year, month, day+daysCount, 0, swe.GREG_CAL)
+    min = swe.pheno_ut(tjd, swe.MOON)[1]
+    temp = min
+    hour = 0.0
+    #Find the dimmest hour in that day
+    while(temp < min and hour < 23):
+        hour += 1.0
+        tjd = swe.julday(year, month, day+daysCount, hour, swe.GREG_CAL)
+        temp = swe.pheno_ut(tjd, swe.MOON)[1]
+        if(temp < min):
+            min = temp
+
+    #Get the minute with the dimmest illumination
+    tjd = swe.julday(year, month, day+daysCount, hour, swe.GREG_CAL)
+    min = swe.pheno_ut(tjd, swe.MOON)[1]
+    temp = min
+    minute = 0.0
+    #Find the dimmest minute
+    while(temp < min):
+        minute += 0.017
+        tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
+        temp = swe.pheno_ut(tjd, swe.MOON)[1]
+        if(temp < min):
+            min = temp
+
+    tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
+    utc = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
+    newMoon_year, newMoon_month, newMoon_day = utc[0], utc[1], utc[2]
+    return (newMoon_year, newMoon_month, newMoon_day)
