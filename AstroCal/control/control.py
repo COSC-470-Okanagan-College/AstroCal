@@ -1,4 +1,3 @@
-from time import time
 import swisseph as swe
 import pytz
 from datetime import datetime
@@ -140,7 +139,7 @@ def getDaysTillFullMoon(year, month, day, timezone):
     return diff
 
 
-# Gets string of data relating to time of solar eclipse
+# Gets array of data relating to time of solar eclipse
 def getWhenSolEclipseLoc(year=0, month=0, day=0):
     if year == 0 & month == 0 & day == 0:
         now = datetime.now()
@@ -152,21 +151,12 @@ def getWhenSolEclipseLoc(year=0, month=0, day=0):
     retflags, tret, attr = swe.sol_eclipse_when_loc(
         tjdut, geopos, swe.FLG_SWIEPH, False)
 
-    timeEclipseStart = swe.jdet_to_utc(tret[1], swe.GREG_CAL)
-    timeEclipseEnd = swe.jdet_to_utc(tret[4], swe.GREG_CAL)
-    timeEclipseMax = swe.jdet_to_utc(tret[0], swe.GREG_CAL)
-    # convert swisseph time to local time object
-    time_formatted_start = utc_hack(timeEclipseStart)
-    time_formatted_end = utc_hack(timeEclipseEnd)
-    time_formatted_max = utc_hack(timeEclipseMax)
-
-    # calculate duration of eclipse
-    timeEclipseDuration = time_formatted_end - time_formatted_start
-
-    return "\n\tStart:\t\t" + str(time_formatted_start) + "\n\tTotality:\t" + str(time_formatted_max) + "\n\tEnd:\t\t" + str(time_formatted_end) + "\n\tDuration:\t" + str(timeEclipseDuration)
+    time = swe.jdet_to_utc(tret[1], swe.GREG_CAL)
+    time_formatted = utc_hack(time)
+    return str(time_formatted)
 
 
-# Gets string of data relating to time of Lunar eclipse
+# Gets array of data relating to time of Lunar eclipse
 def getWhenLunEclipseLoc(year=0, month=0, day=0):
     if year == 0 & month == 0 & day == 0:
         now = datetime.now()
@@ -178,18 +168,9 @@ def getWhenLunEclipseLoc(year=0, month=0, day=0):
     retflags, tret, attr = swe.lun_eclipse_when_loc(
         tjdut, geopos, swe.FLG_SWIEPH, False)
 
-    timeEclipseStart = swe.jdet_to_utc(tret[6], swe.GREG_CAL)
-    timeEclipseEnd = swe.jdet_to_utc(tret[7], swe.GREG_CAL)
-    timeEclipseMax = swe.jdet_to_utc(tret[0], swe.GREG_CAL)
-    # convert swisseph time to local time object
-    time_formatted_start = utc_hack(timeEclipseStart)
-    time_formatted_end = utc_hack(timeEclipseEnd)
-    time_formatted_max = utc_hack(timeEclipseMax)
-
-    # calculate duration of eclipse
-    timeEclipseDuration = time_formatted_end - time_formatted_start
-
-    return "\n\tStart:\t\t" + str(time_formatted_start) + "\n\tTotality:\t" + str(time_formatted_max) + "\n\tEnd:\t\t" + str(time_formatted_end) + "\n\tDuration:\t" + str(timeEclipseDuration)
+    time = swe.jdet_to_utc(tret[6], swe.GREG_CAL)
+    time_formatted = utc_hack(time)
+    return str(time_formatted)
 
 
 # calculates the moons current illumination
