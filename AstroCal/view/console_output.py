@@ -1,7 +1,8 @@
 # Astro Calender Console Menu
 
 # Imports
-from datetime import datetime
+from datetime import datetime,timedelta
+from gettext import find
 from control import control
 import sys
 
@@ -34,7 +35,8 @@ def sun_menu():
     print('Sun Events')
     print('1. View Today')
     print('2. Solar Eclipse')
-    print('3. Back \n')
+    print('3. Day Lengths')
+    print('4. Back \n')
     option = int(input('Enter selection: '))
     if option == 1:
         print(getCurrentdate())  # Displays current date
@@ -45,6 +47,25 @@ def sun_menu():
     elif option == 2:
         print("Solar Eclipse:", control.getWhenSolEclipseLoc())
     elif option == 3:
+        amountOfDays = int(input('Enter amount of days: '))
+        now = datetime.now()
+        month = now.month
+        year = now.year
+        day = now.day
+        currentDay = datetime(year, month, day)
+        dayLengths = control.getVariableDayLength(year, month, day, amountOfDays)
+        for i in range(0,amountOfDays):
+            currentDay += timedelta(days=1)
+            print(str(currentDay.date()))
+
+            sunRise = control.celestial_rise_or_set('SUN', 'RISE',year, month, day + i)
+            sunSet = control.celestial_rise_or_set('SUN', 'SET',year, month, day + i)
+            print("Day Begin: " + sunRise[0: sunRise.find(' ')])
+            print("Day End: " + sunSet[0: sunSet.find(' ')])
+            print("Length of Day: " + str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n")
+
+
+    elif option == 4:
         main_menu()
     else:
         print('error not an option')

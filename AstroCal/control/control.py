@@ -1,6 +1,7 @@
 import swisseph as swe
 import pytz
 from datetime import datetime
+from array import *
 
 
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
@@ -207,6 +208,34 @@ def getMoonStatus():
     moon_percent_rounded = round(moon_percent)
     return result, "Illumination " + str(moon_percent_rounded) + "%"
 
+
+def getVariableDayLength(year, month, day, amountOfDays):
+    """Return 2d array with amount of hours and minutes per day from current day to specified amount of days
+    """
+    amountOfDayLight = []
+
+    for i in range(0,amountOfDays): 
+        daySunRise = getRiseSet(year, month, day + i, 'SUN', 'RISE')
+        daySunSet = getRiseSet(year, month, day + i, 'SUN', 'SET')
+        #convert to datetime object to perfrom difference
+        dayRiseTime = datetime(daySunRise[0], daySunRise[1], daySunRise[2], daySunRise[3], daySunRise[4], int(daySunRise[5]))
+        daySetTime = datetime(daySunSet[0], daySunSet[1], daySunSet[2], daySunSet[3], daySunSet[4], int(daySunSet[5]))
+        
+        #get difference between sunrise and and sunset 
+        timeDiff = abs(daySetTime-dayRiseTime)
+        #convert time difference into seconds
+        seconds = timeDiff.seconds
+        #convert seconds into total hours
+        dayLightHours = (seconds / 60) / 60
+        #extract remainder of minutes
+        dayLightHoursRemainder = dayLightHours % 1
+        outputHours = int(dayLightHours // 1)
+        outputMinutes = round(dayLightHoursRemainder * 60)
+        #append hours and minutes to 2d array
+        amountOfDayLight.append([outputHours, outputMinutes])
+
+    return amountOfDayLight
+    
 def getDateOfNextNewMoon(year=0, month=0, day=0):
     """Return the date of the next new moon.
     input/output in UTC time.
@@ -268,3 +297,4 @@ def getDateOfNextNewMoon(year=0, month=0, day=0):
     utc = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
     newMoon_year, newMoon_month, newMoon_day = utc[0], utc[1], utc[2]
     return (newMoon_year, newMoon_month, newMoon_day)
+
