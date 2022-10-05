@@ -226,12 +226,12 @@ def getVariableDayLength(year, month, day, amountOfDays):
         timeDiff = abs(daySetTime-dayRiseTime)
         #convert time difference into seconds
         seconds = timeDiff.seconds
-        #extract total hours from seconds
+        #convert seconds into total hours
         dayLightHours = (seconds / 60) / 60
-        #extract remaining minutes
-        dayLightMinutes = dayLightHours % 1
+        #extract remainder of minutes
+        dayLightHoursRemainder = dayLightHours % 1
         outputHours = int(dayLightHours // 1)
-        outputMinutes = round(dayLightMinutes * 60)
+        outputMinutes = round(dayLightHoursRemainder * 60)
         #append hours and minutes to 2d array
         amountOfDayLight.append([outputHours, outputMinutes])
 
