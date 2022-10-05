@@ -51,11 +51,11 @@ class DayMode(BoxLayout):
 class CalendarApp(App):
     def build(self):
         cg = CalGrid()
-        cg.ids['month_label'].text = dates.strftime("%B %Y")
+        cg.ids['month_label'].text = dates.strftime("%B %Y") #Show month name and year
         buttons = list(cg.ids.keys())
         y = startday
         for x in range(1, daysInMonth() + 1):
-            cg.ids[buttons[y + 1]].text = str(x)
+            cg.ids[buttons[y + 1]].text = str(x) #populate buttons and show day numbers
             cg.ids[buttons[y + 1]].bind(on_press=partial(self.showDayMode, x))
             y += 1
         return cg
