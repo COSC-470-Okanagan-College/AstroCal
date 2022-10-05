@@ -10,23 +10,28 @@
 	Label: 
     	id: ms1 
 <CalGrid>:
-	rows: 8
+	rows: 9
 	padding: 10
 	spacing: 10
+	
+	
 	BoxLayout:
 		Button:
 			text: '<'
 			font_size: 40
+			size_hint: 0.3, 1
 		Label:
 			id: month_label
 			font_size: 40
-		Label:
-			text: 'Location'
 		Button:
 			text: '>'
 			font_size: 40
-		Button:
-		    text: 'View'
+			size_hint: 0.3, 1
+	BoxLayout:
+		spacing: 0
+	    Label:
+	    	text: 'Kelowna, Canada'
+			font_size: 20
 	BoxLayout:
 		Label:
 			text: 'Su'

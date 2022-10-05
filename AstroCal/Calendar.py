@@ -32,7 +32,7 @@ class DayMode(FloatLayout):
 class CalendarApp(App):
     def build(self):
         cg = CalGrid()
-        cg.ids['month_label'].text = dates.strftime("%B %Y")
+        cg.ids['month_label'].text = dates.strftime("%B %Y") 
         buttons = list(cg.ids.keys())
         y = startday
         for x in range(1, daysInMonth() + 1):
