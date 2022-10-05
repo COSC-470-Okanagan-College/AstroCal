@@ -192,7 +192,7 @@ def getMoonStatus():
         moon_status = " Crescent"
     elif round(moon_percent) > 51:
         moon_status = " Cibbous"
-
+        
     if moon_percent < next_day_percent:
         result = "Waxing" + moon_status
     elif moon_percent > next_day_percent:
