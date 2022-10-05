@@ -60,15 +60,16 @@ class CalendarApp(App):
             y += 1
         return cg
     
-    def showDayMode(self, instance, day):
+    def showDayMode(self, instance, dayX):
         dayInfo = DayMode()
         #location
         #dayInfo.ids['l1'].text = 
         # moon and sun info
-        sunrise = getRiseSet(dates.year, dates.month, 1, 'SUN', 'RISE')
-        sunset = getRiseSet(dates.year, dates.month, 1, 'SUN', 'SET')
-        moonrise = getRiseSet(dates.year, dates.month, 1, 'MOON', 'RISE')
-        moonset = getRiseSet(dates.year, dates.month, 1, 'MOON', 'SET')
+        sunrise = getRiseSet(dates.year, dates.month, dayX, 'SUN', 'RISE')
+        sunset = getRiseSet(dates.year, dates.month, dayX, 'SUN', 'SET')
+        moonrise = getRiseSet(dates.year, dates.month, dayX, 'MOON', 'RISE')
+        moonset = getRiseSet(dates.year, dates.month, dayX, 'MOON', 'SET')
+        # jdut1_to_utc returns a list - convert the time to a time() object
         sunriseT = time(sunrise[3], sunrise[4], int(sunrise[5]))
         sunsetT = time(sunset[3], sunset[4], int(sunset[5]))
         moonriseT = time(moonrise[3], moonrise[4], int(moonrise[5]))
@@ -77,7 +78,7 @@ class CalendarApp(App):
         dayInfo.ids['ss1'].text = "Sunset: " + sunsetT.strftime("%H:%M:%S")
         dayInfo.ids['mr1'].text = "Moonrise: " + moonriseT.strftime("%H:%M:%S")
         dayInfo.ids['ms1'].text = "Moonset: " + moonsetT.strftime("%H:%M:%S")
-        popupWindow = Popup(title="Popup Window", content=dayInfo, size=(400,400))
+        popupWindow = Popup(title="Popup Window", content=dayInfo)
         popupWindow.open()
 
 if __name__ == "__main__":
