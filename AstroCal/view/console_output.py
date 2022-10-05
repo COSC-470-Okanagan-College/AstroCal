@@ -53,7 +53,7 @@ def sun_menu():
         year = now.year
         day = now.day
         currentDay = datetime(year, month, day)
-        dayLenghts = control.getVariableDayLength(year, month, day, amountOfDays)
+        dayLengths = control.getVariableDayLength(year, month, day, amountOfDays)
         for i in range(0,amountOfDays):
             currentDay += timedelta(days=1)
             print(str(currentDay.date()))
@@ -62,7 +62,7 @@ def sun_menu():
             sunSet = control.celestial_rise_or_set('SUN', 'SET',year, month, day + i)
             print("Day Begin: " + sunRise[0: sunRise.find(' ')])
             print("Day End: " + sunSet[0: sunSet.find(' ')])
-            print("Length of Day: " + str(dayLenghts[i][0]) + ":" + str(dayLenghts[i][1]) + "hrs" + "\n")
+            print("Length of Day: " + str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n")
 
 
     elif option == 4:
