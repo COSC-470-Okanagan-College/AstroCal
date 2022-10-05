@@ -207,12 +207,16 @@ def getMoonStatus():
     moon_percent_rounded = round(moon_percent)
     return result, "Illumination " + str(moon_percent_rounded) + "%"
 
-def getDateOfNextNewMoon(year, month, day):
+def getDateOfNextNewMoon(year=0, month=0, day=0):
     """Return the date of the next new moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a new moon illumination level (~0%)
     Checks for dimmest hour and minute as well to correct for UTC time conversion."""
-    
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
     #Converts UTC time into julian day number
     tjd = swe.julday(year, month, day, 0, swe.GREG_CAL)
     #Get the illumination of the moon (variable: illum) of the starting day to check if it is a new moon

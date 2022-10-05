@@ -1,6 +1,6 @@
 import unittest
 
-from control import getDateOfNextNewMoon
+from AstroCal.control.control import getDateOfNextNewMoon
 
 class TestDateOfNextNewMoon(unittest.TestCase):
     def test_DaysTillFullMoon_WhenSuccessful(self):
@@ -12,7 +12,3 @@ class TestDateOfNextNewMoon(unittest.TestCase):
         self.assertNotEqual(getDateOfNextNewMoon(2022,10,4),(2022,10,26),"Test Fail")
         self.assertNotEqual(getDateOfNextNewMoon(2032,12,8),(2032,12,31),"Test Fail")
         self.assertNotEqual(getDateOfNextNewMoon(2032,12,8),(2033,1,2),"Test Fail")
-
-
-if __name__ == '__main__':
-    unittest.main()
