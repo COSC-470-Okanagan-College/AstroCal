@@ -12,58 +12,64 @@ from kivy.uix.gridlayout import *
 from kivy.uix.widget import *
 from kivy.uix.textinput import *
 from kivy.uix.togglebutton import ToggleButton
+from kivy.uix.image import Image
 from datetime import datetime
 from control import control
 import pytz
 import sys
 import logging
-logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
-
 
 blue =  [0,0,1,1]
-
 
 class HBoxLayoutExample(App):
     def build(self):
         mainlayout = BoxLayout(orientation='vertical', height=800, width=800)
         toplayout = BoxLayout(size_hint=(1, None))
-        middlelayout = BoxLayout(size_hint=(1,None),height=400)
+        middlelayout = BoxLayout(size_hint=(1,None),height=400,orientation='vertical')
         bottomlayout = BoxLayout(size_hint=(1,None),height=75)
     #Defines the 3 buttons for the bottom of the screen: day, month, event.
-        day = ToggleButton(text="Day" ,
-                     size = (10,10), 
+        day = ToggleButton(text="DAY" ,
+                     size = (20,20), 
                      background_color=blue,
                      bold=True,
                      group="bottomButtons")
-        #day.bind(on_press=self.dayView)
-        month = ToggleButton(text="Month" ,
-                    size = (10,10), 
+        day.bind(on_press=self.dayView)
+        month = ToggleButton(text="MONTH" ,
+                    size = (20,20), 
                     background_color=blue,
                     bold=True,
                     group="bottomButtons")
-        #month.bind(on_press=self.monthView)
-        event = ToggleButton(text="Events" ,
-                    size = (10,10), 
+        month.bind(on_press=self.monthView)
+        event = ToggleButton(text="EVENTS" ,
+                    size = (20,20), 
                     background_color=blue,
                     bold=True,
                     group="bottomButtons")
-        #event.bind(on_press=self.eventView)
+        event.bind(on_press=self.eventView)
         
         bottomlayout.add_widget(day)
         bottomlayout.add_widget(month)
         bottomlayout.add_widget(event)
     #Add display features to middle primary display window
+        dayInfo = BoxLayout(orientation="vertical",size_hint=(1,None),height=150)
+        dayImage = BoxLayout(size_hint=(1,None),height=250)
+        wimg = Image(source="view/assets/moon_phases/full_moon.png",allow_stretch=True)
+        dayImage.add_widget(wimg)
+
+        sunrise = Label(text="SUNRISE "+str(self.getSunRise().time()), 
+                        bold=True,
+                        underline=True,
+                        halign='left',
+                        outline_color=blue)
+        sunset = Label(text="SUNSET "+str(self.getSunSet().time()),bold=True,underline=True)
+        moonrise = Label(text="MOONRISE "+str(self.getMoonRise().time()),bold=True,underline=True)
+        moonset = Label(text="MOONSET "+str(self.getMoonSet().time()),bold=True,underline=True)
         
-        sunrise = Label(text="SUNRISE "+str(self.getSunRise()).center(10), bold=True)
-        sunset = Label(text="SUNSET "+str(self.getSunSet()),bold=True)
-        moonrise = Label(text="MOONRISE "+str(self.getMoonRise()),bold=True)
-        moonset = Label(text="MOONSET "+str(self.getMoonSet()),bold=True)
-        dayInfo = GridLayout()
-        dayInfo.cols = 1
-        dayInfo.add_widget(moonset)
-        dayInfo.add_widget(moonrise)
-        dayInfo.add_widget(sunset)
         dayInfo.add_widget(sunrise)
+        dayInfo.add_widget(sunset)
+        dayInfo.add_widget(moonrise)
+        dayInfo.add_widget(moonset)
+        middlelayout.add_widget(dayImage)
         middlelayout.add_widget(dayInfo)
        
     #Add to top boxlayout
@@ -78,15 +84,15 @@ class HBoxLayoutExample(App):
         return mainlayout
 
     ## Functions to call specific fields
-    def dayView(middlelayout):
+    def dayView(self,middlelayout):
         field = Label(text='Good Day')
         middlelayout.add_widget(field)
         
-    def monthView(middlelayout):
+    def monthView(self,middlelayout):
         field = Label(text='What a month')
         middlelayout.add_widget(field)
         
-    def eventView(middlelayout):
+    def eventView(self,middlelayout):
         field = Label(text='Whats the event')
         middlelayout.add_widget(field)
         
