@@ -142,9 +142,9 @@ def getWhenSolEclipseLoc(year=0, month=0, day=0):
     retflags, tret, attr = swe.sol_eclipse_when_loc(
         tjdut, geopos, swe.FLG_SWIEPH, False)
 
-    timeEclipseStart = swe.jdet_to_utc(tret[1], swe.GREG_CAL)
-    timeEclipseEnd = swe.jdet_to_utc(tret[4], swe.GREG_CAL)
-    timeEclipseMax = swe.jdet_to_utc(tret[0], swe.GREG_CAL)
+    timeEclipseStart = swe.jdut1_to_utc(tret[1], swe.GREG_CAL)
+    timeEclipseEnd = swe.jdut1_to_utc(tret[4], swe.GREG_CAL)
+    timeEclipseMax = swe.jdut1_to_utc(tret[0], swe.GREG_CAL)
 
     # convert swisseph time to local time object
     time_formatted_start = utc_hack(timeEclipseStart)
@@ -170,9 +170,10 @@ def getWhenLunEclipseLoc(year=0, month=0, day=0):
     retflags, tret, attr = swe.lun_eclipse_when_loc(
         tjdut, geopos, swe.FLG_SWIEPH, False)
 
-    timeEclipseStart = swe.jdet_to_utc(tret[6], swe.GREG_CAL)
-    timeEclipseEnd = swe.jdet_to_utc(tret[7], swe.GREG_CAL)
-    timeEclipseMax = swe.jdet_to_utc(tret[0], swe.GREG_CAL)
+    timeEclipseStart = swe.jdut1_to_utc(tret[6], swe.GREG_CAL)
+    timeEclipseEnd = swe.jdut1_to_utc(tret[7], swe.GREG_CAL)
+    timeEclipseMax = swe.jdut1_to_utc(tret[0], swe.GREG_CAL)
+
     # convert swisseph time to local time object
     time_formatted_start = utc_hack(timeEclipseStart)
     time_formatted_end = utc_hack(timeEclipseEnd)
