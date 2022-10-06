@@ -12,12 +12,13 @@
 			"program": "${workspaceFolder}/AstroCal/core.py",
 			"console": "integratedTerminal",
 			"justMyCode": true,
+			"env": {"PYTHONPATH": "${workspaceFolder}${pathSeparator}${env:PYTHONPATH}"}
 		},
 		{
 			"name": "Test",
 			"type": "python",
 			"request": "launch",
-			"program": "${workspaceFolder}/tests/test_Eclipse.py",
+			"program": "${workspaceFolder}/tests/test_All.py",
 			"console": "integratedTerminal",
 			"justMyCode": true,
             "cwd": "${fileDirname}",

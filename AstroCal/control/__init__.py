@@ -1,1 +1,1 @@
-from control.control import *
+from AstroCal.control.control import *
