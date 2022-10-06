@@ -137,7 +137,7 @@ def getCurrentMonth():
     month_str = now.strftime("%B")
     month = now.month
     year = now.year
-    same_day = "Same Day"
+    same_day = ""
     next_day = "Next Day"
 
     # Get number of days in the month
