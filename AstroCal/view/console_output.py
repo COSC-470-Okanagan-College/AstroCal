@@ -137,6 +137,8 @@ def getCurrentMonth():
     month_str = now.strftime("%B")
     month = now.month
     year = now.year
+    same_day = "Same Day"
+    next_day = "Next Day"
 
     # Get number of days in the month
     if month > 11:  # If month is December
@@ -164,13 +166,13 @@ def getCurrentMonth():
         print("{:<12} | {:<12} | {:<12}".format("Event", "Time", "Day"))
         print("".ljust(36, '-'))
         print("{:<12} | {:<12} | {:<12}".format(
-            "Sunrise", format_24hour_time_output(sun_rise_time), str(sun_rise_day)))
+            "Sunrise", format_24hour_time_output(sun_rise_time),  same_day if day == sun_rise_day else next_day))
         print("{:<12} | {:<12} | {:<12}".format(
-            "Sunset", format_24hour_time_output(sun_set_time), str(sun_set_day)))
+            "Sunset", format_24hour_time_output(sun_set_time), same_day if day == sun_set_day else next_day))
         print("{:<12} | {:<12} | {:<12}".format("Moonrise",
-              format_24hour_time_output(moon_rise_time), str(moon_rise_day)))
+              format_24hour_time_output(moon_rise_time), same_day if day == moon_rise_day else next_day))
         print("{:<12} | {:<12} | {:<12}".format(
-            "Moonset", format_24hour_time_output(moon_set_time), str(moon_set_day)))
+            "Moonset", format_24hour_time_output(moon_set_time), same_day if day == moon_set_day else next_day))
         print()
     main_menu()
 
