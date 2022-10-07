@@ -390,4 +390,4 @@ def getLocationTest():
     if getLocation("New York", "United States") == LOCATION:
         print("Global variable test passed.")
 
-#getLocationTest() #Uncomment function to run test for the getLocation function
+getLocationTest() #Uncomment function to run test for the getLocation function

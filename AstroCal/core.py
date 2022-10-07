@@ -1,11 +1,18 @@
 import AstroCal.view.console_output as console_output
+import AstroCal.view.Calendar_ui as calendar
 import sys
+import kivy
+
+
 
 
 def run():
+    # Runs day page UI
+    #app = view.home
+    #app.run()
+    
     # Runs UI
-    #app = view.tkGUI_Launch
-    # app.mainloop()
+    # calendar.CalendarApp().run()
 
     # Runs Console
     console_output.main_menu()
