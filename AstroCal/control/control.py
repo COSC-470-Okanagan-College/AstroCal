@@ -368,6 +368,11 @@ def getLocationTest():
 
     Function below commented out until needed. All tests pass at time of writing.
     """
+    #Prints a full row from the table
+    testLocation = getLocation("Madrid", "Spain")
+    print("Full location table row looks like (below)")
+    print(testLocation)
+    print("TESTS BELOW")
     #Checks that the first item (City) returned is accurate
     if getLocation("Riyadh", "Saudi Arabia")[0] == "Riyadh":
         print("City test for Riyadh, Saudi Arabia passed. City is " + getLocation("Riyadh", "Saudi Arabia")[0] + ".")
