@@ -8,10 +8,18 @@ from array import *
 #Global tuple to save the currently called location. Interacts with getLocation and getLocationTest
 LOCATION = ()
 
+from time import time
+import swisseph as swe
+import pytz
+from datetime import datetime
+from array import *
+
+
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
 # celestial: SUN, MOON
 # event: RISE, SET
 # year, month, day of when the event will happen, can be left out of parameters to get current day
+# Returns time_unformatted and the day the event happens on
 def celestial_rise_or_set(celestial, event, year=0, month=0, day=0):
     if year == 0 & month == 0 & day == 0:
         now = datetime.now()
@@ -20,7 +28,7 @@ def celestial_rise_or_set(celestial, event, year=0, month=0, day=0):
         day = now.day
     event_result = getRiseSet(year, month, day, celestial, event)
     time_unformatted = utc_hack(event_result)
-    return format_24hour_time_output(time_unformatted) + " Day: " + str(time_unformatted.day)
+    return time_unformatted, time_unformatted.day
 
 
 # Turns tuplet into usable DateTime object
@@ -30,19 +38,6 @@ def utc_hack(date_tup):
                        date_tup[3], date_tup[4], 0, 0, pytz.UTC)
     timeLocal = timeUTC.astimezone(timezone)
     return timeLocal
-
-
-# Formats any datetime object into 24 hour string
-def format_24hour_time_output(time):
-    if time.hour < 10:
-        hour_str = "0" + str(time.hour)
-    else:
-        hour_str = str(time.hour)
-    if time.minute < 10:
-        minute_str = "0" + str(time.minute)
-    else:
-        minute_str = str(time.minute)
-    return hour_str + ':' + minute_str
 
 
 # gets the raw DateTime object of rise or set of a celestial object
@@ -144,7 +139,8 @@ def getDaysTillFullMoon(year, month, day, timezone):
     return diff
 
 
-# Gets array of data relating to time of solar eclipse
+# Gets string of data relating to time of solar eclipse
+# Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
 def getWhenSolEclipseLoc(year=0, month=0, day=0):
     if year == 0 & month == 0 & day == 0:
         now = datetime.now()
@@ -156,12 +152,23 @@ def getWhenSolEclipseLoc(year=0, month=0, day=0):
     retflags, tret, attr = swe.sol_eclipse_when_loc(
         tjdut, geopos, swe.FLG_SWIEPH, False)
 
-    time = swe.jdet_to_utc(tret[1], swe.GREG_CAL)
-    time_formatted = utc_hack(time)
-    return str(time_formatted)
+    timeEclipseStart = swe.jdut1_to_utc(tret[1], swe.GREG_CAL)
+    timeEclipseEnd = swe.jdut1_to_utc(tret[4], swe.GREG_CAL)
+    timeEclipseMax = swe.jdut1_to_utc(tret[0], swe.GREG_CAL)
+
+    # convert swisseph time to local time object
+    time_formatted_start = utc_hack(timeEclipseStart)
+    time_formatted_end = utc_hack(timeEclipseEnd)
+    time_formatted_max = utc_hack(timeEclipseMax)
+
+    # calculate duration of eclipse
+    timeEclipseDuration = time_formatted_end - time_formatted_start
+
+    return (time_formatted_start, time_formatted_max, time_formatted_end, timeEclipseDuration)
 
 
-# Gets array of data relating to time of Lunar eclipse
+# Gets string of data relating to time of Lunar eclipse
+# Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
 def getWhenLunEclipseLoc(year=0, month=0, day=0):
     if year == 0 & month == 0 & day == 0:
         now = datetime.now()
@@ -173,9 +180,19 @@ def getWhenLunEclipseLoc(year=0, month=0, day=0):
     retflags, tret, attr = swe.lun_eclipse_when_loc(
         tjdut, geopos, swe.FLG_SWIEPH, False)
 
-    time = swe.jdet_to_utc(tret[6], swe.GREG_CAL)
-    time_formatted = utc_hack(time)
-    return str(time_formatted)
+    timeEclipseStart = swe.jdut1_to_utc(tret[6], swe.GREG_CAL)
+    timeEclipseEnd = swe.jdut1_to_utc(tret[7], swe.GREG_CAL)
+    timeEclipseMax = swe.jdut1_to_utc(tret[0], swe.GREG_CAL)
+
+    # convert swisseph time to local time object
+    time_formatted_start = utc_hack(timeEclipseStart)
+    time_formatted_end = utc_hack(timeEclipseEnd)
+    time_formatted_max = utc_hack(timeEclipseMax)
+
+    # calculate duration of eclipse
+    timeEclipseDuration = time_formatted_end - time_formatted_start
+
+    return (time_formatted_start, time_formatted_max, time_formatted_end, timeEclipseDuration)
 
 
 # calculates the moons current illumination
@@ -197,7 +214,7 @@ def getMoonStatus():
         moon_status = " Crescent"
     elif round(moon_percent) > 51:
         moon_status = " Cibbous"
-        
+
     if moon_percent < next_day_percent:
         result = "Waxing" + moon_status
     elif moon_percent > next_day_percent:
@@ -218,28 +235,40 @@ def getVariableDayLength(year, month, day, amountOfDays):
     """
     amountOfDayLight = []
 
-    for i in range(0,amountOfDays): 
+    for i in range(0, amountOfDays):
         daySunRise = getRiseSet(year, month, day + i, 'SUN', 'RISE')
         daySunSet = getRiseSet(year, month, day + i, 'SUN', 'SET')
-        #convert to datetime object to perfrom difference
-        dayRiseTime = datetime(daySunRise[0], daySunRise[1], daySunRise[2], daySunRise[3], daySunRise[4], int(daySunRise[5]))
-        daySetTime = datetime(daySunSet[0], daySunSet[1], daySunSet[2], daySunSet[3], daySunSet[4], int(daySunSet[5]))
-        
-        #get difference between sunrise and and sunset 
+        # convert to datetime object to perfrom difference
+        dayRiseTime = datetime(
+            daySunRise[0], daySunRise[1], daySunRise[2], daySunRise[3], daySunRise[4], int(daySunRise[5]))
+        daySetTime = datetime(
+            daySunSet[0], daySunSet[1], daySunSet[2], daySunSet[3], daySunSet[4], int(daySunSet[5]))
+
+        # get difference between sunrise and and sunset
         timeDiff = abs(daySetTime-dayRiseTime)
-        #convert time difference into seconds
+        # convert time difference into seconds
         seconds = timeDiff.seconds
-        #convert seconds into total hours
+        # convert seconds into total hours
         dayLightHours = (seconds / 60) / 60
-        #extract remainder of minutes
+        # extract remainder of minutes
         dayLightHoursRemainder = dayLightHours % 1
         outputHours = int(dayLightHours // 1)
         outputMinutes = round(dayLightHoursRemainder * 60)
-        #append hours and minutes to 2d array
+        # Adds 0 and if hour or minute is single digit, and convert to string
+        if outputHours < 10:
+            outputHours = "0" + str(outputHours)
+        else:
+            outputHours = str(outputHours)
+        if outputMinutes < 10:
+            outputMinutes = "0" + str(outputMinutes)
+        else:
+            outputMinutes = str(outputMinutes)
+        # append hours and minutes to 2d array
         amountOfDayLight.append([outputHours, outputMinutes])
 
     return amountOfDayLight
-    
+
+
 def getDateOfNextNewMoon(year=0, month=0, day=0):
     """Return the date of the next new moon.
     input/output in UTC time.
@@ -250,51 +279,50 @@ def getDateOfNextNewMoon(year=0, month=0, day=0):
         year = now.year
         month = now.month
         day = now.day
-    #Converts UTC time into julian day number
+    # Converts UTC time into julian day number
     tjd = swe.julday(year, month, day, 0, swe.GREG_CAL)
-    #Get the illumination of the moon (variable: illum) of the starting day to check if it is a new moon
+    # Get the illumination of the moon (variable: illum) of the starting day to check if it is a new moon
     res = swe.pheno_ut(tjd, swe.MOON)
     illum = res[1]
 
-    #Compare the illumintation of the moon to a threshold (0.005) and get the first day
-    #since the starting day where the threshold is met, this indicates new moon
+    # Compare the illumintation of the moon to a threshold (0.005) and get the first day
+    # since the starting day where the threshold is met, this indicates new moon
     daysCount = 0
-    #Find the first day that meets the illumination requirement.
-    while(round(illum,3) > 0.005):
+    # Find the first day that meets the illumination requirement.
+    while (round(illum, 3) > 0.005):
         daysCount += 1
         tjd = swe.julday(year, month, day+daysCount, 0, swe.GREG_CAL)
         res = swe.pheno_ut(tjd, swe.MOON)
         illum = res[1]
-        
-    
-    #New moon happens at a speciifc hour and minute during the day
-    #We get this specific to make sure the timezone conversions will be accurate
-    #Note: the mintues seem to be a little off when c0mpared to online sources
 
-    #Get the hour with the dimmest illumination
+    # New moon happens at a speciifc hour and minute during the day
+    # We get this specific to make sure the timezone conversions will be accurate
+    # Note: the mintues seem to be a little off when c0mpared to online sources
+
+    # Get the hour with the dimmest illumination
     tjd = swe.julday(year, month, day+daysCount, 0, swe.GREG_CAL)
     min = swe.pheno_ut(tjd, swe.MOON)[1]
     temp = min
     hour = 0.0
-    #Find the dimmest hour in that day
-    while(temp < min and hour < 23):
+    # Find the dimmest hour in that day
+    while (temp < min and hour < 23):
         hour += 1.0
         tjd = swe.julday(year, month, day+daysCount, hour, swe.GREG_CAL)
         temp = swe.pheno_ut(tjd, swe.MOON)[1]
-        if(temp < min):
+        if (temp < min):
             min = temp
 
-    #Get the minute with the dimmest illumination
+    # Get the minute with the dimmest illumination
     tjd = swe.julday(year, month, day+daysCount, hour, swe.GREG_CAL)
     min = swe.pheno_ut(tjd, swe.MOON)[1]
     temp = min
     minute = 0.0
-    #Find the dimmest minute
-    while(temp < min):
+    # Find the dimmest minute
+    while (temp < min):
         minute += 0.017
         tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
         temp = swe.pheno_ut(tjd, swe.MOON)[1]
-        if(temp < min):
+        if (temp < min):
             min = temp
 
     tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
