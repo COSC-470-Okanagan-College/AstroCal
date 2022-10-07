@@ -323,44 +323,7 @@ def getDateOfNextNewMoon(year=0, month=0, day=0):
     utc = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
     newMoon_year, newMoon_month, newMoon_day = utc[0], utc[1], utc[2]
     return (newMoon_year, newMoon_month, newMoon_day)
-
-def getLocation(city, country):
-    """
-    Connects to the database 'locations.db' in the folder 'resources' and queries the
-    database to get the corresponding row and then assign it to the global variable 'location'
-    before returning a row of the database in the form of a tuple.
-
-    Table Columns:
-    1: 'City' as a string
-    2: 'Country' as a string
-    3: 'Elevation' (in meters) as an int
-    4: 'Timezone' as a string
-    5: 'Latitude' as a float
-    6: 'Longitude' as a float
-    """
-    #Assigns database path/name to the variable
-    database = "../AstroCal/resources/locations.db"
-    #Checks if the user has inputed England, Wales or Scotland, as the database saves them all as UK
-    #Ireland is seperate
-    if country == "England" or country == "Wales" or country == "Scotland":
-        country = "United Kingdom"
-        
-    #Declares a connection to the database, None and the try and except are to minimize faulty calls
-    conn = None
-    try:
-        conn = sqlite3.connect(database)
-    except Error as e:
-        print(e)
-    #Checks that the connection is properly established, creates a cursor and then uses it to run a query on the database
-    with conn:
-        cur = conn.cursor()
-        cur.execute("SELECT * FROM geonamesLocations WHERE city=? AND country=?", (city, country,))
-    #Gets the first row of the query and assigns it to 'row' and global variable 'location' before it is returned
-    row = cur.fetchone()
-    global LOCATION
-    LOCATION = row
-    return row
-
+    
 def getLocationTest():
     """
     'Unit' tests as Fred, Mitchell and I discovered that trying to access a database from unit tests needs more work than it would be worth.
