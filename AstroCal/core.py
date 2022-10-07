@@ -5,10 +5,10 @@ import sys
 
 def run():
     # Runs UI
-    calendar.CalendarApp().run()
+    # calendar.CalendarApp().run()
 
     # Runs Console
-    #console_output.main_menu()
+    console_output.main_menu()
 
 
 if __name__ == "__main__":

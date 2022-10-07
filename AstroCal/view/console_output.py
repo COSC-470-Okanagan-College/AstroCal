@@ -52,7 +52,12 @@ def sun_menu():
         print('Sun will Set : ' + format_24hour_time_output(sun_set_time) +
               " Days: " + str(sun_set_day))
     elif option == 2:
-        print("Solar Eclipse:", str(control.getWhenSolEclipseLoc()))
+        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc()
+        print("Solar Eclipse:")
+        print("\tStart:\t\t" + str(sol_eclipse_start))
+        print("\tTotality:\t" + str(sol_eclipse_max))
+        print("\tEnd:\t\t" + str(sol_eclipse_end))
+        print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 3:
         amountOfDays = int(input('Enter amount of days: '))
         year, month, day = get_current_year_month_day()
@@ -112,7 +117,12 @@ def moon_menu():
         print('Moon will Set : ' + format_24hour_time_output(moon_set_time) +
               " Days: " + str(moon_set_day))
     elif option == 2:
-        print("Lunar Eclipse:", str(control.getWhenLunEclipseLoc()))
+        lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipseLoc()
+        print("Lunar Eclipse:")
+        print("\tStart:\t\t" + str(lun_eclipse_start))
+        print("\tTotality:\t" + str(lun_eclipse_max))
+        print("\tEnd:\t\t" + str(lun_eclipse_end))
+        print("\tDuration:\t" + str(lun_eclipse_duration))
     elif option == 3:
         moon_status_result = control.getMoonStatus()
         print(moon_status_result[0])
