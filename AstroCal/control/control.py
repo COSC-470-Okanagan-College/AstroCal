@@ -7,6 +7,7 @@ from datetime import datetime
 from array import *
 
 #Global tuple to save the currently called location. Interacts with getLocation and getLocationTest
+#Uncomment the function call at the bottom to use the getLocation tests
 LOCATION = ()
 
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
@@ -341,7 +342,7 @@ def getLocation(city, country):
     #Assigns database path/name to the variable
     database = "../AstroCal/resources/locations.db"
     #Checks if the user has inputed England, Wales or Scotland, as the database saves them all as UK
-    #Ireland is seperate
+    #Ireland is a seperate entry from the other three countries
     if country == "England" or country == "Wales" or country == "Scotland":
         country = "United Kingdom"
         
@@ -369,10 +370,7 @@ def getLocationTest():
     Function below commented out until needed. All tests pass at time of writing.
     """
     #Prints a full row from the table
-    testLocation = getLocation("Madrid", "Spain")
-    print("Full location table row looks like (below)")
-    print(testLocation)
-    print("TESTS BELOW")
+    print((f"A full row of the locations table looks like: %s" % (getLocation("Madrid", "Spain"),)))
     #Checks that the first item (City) returned is accurate
     if getLocation("Riyadh", "Saudi Arabia")[0] == "Riyadh":
         print("City test for Riyadh, Saudi Arabia passed. City is " + getLocation("Riyadh", "Saudi Arabia")[0] + ".")
@@ -395,4 +393,4 @@ def getLocationTest():
     if getLocation("New York", "United States") == LOCATION:
         print("Global variable test passed.")
 
-getLocationTest() #Uncomment function to run test for the getLocation function
+#getLocationTest() #Uncomment function to run test for the getLocation function
