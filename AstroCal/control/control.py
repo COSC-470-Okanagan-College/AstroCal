@@ -9,7 +9,6 @@ from array import *
 #Global tuple to save the currently called location. Interacts with getLocation and getLocationTest
 LOCATION = ()
 
-
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
 # celestial: SUN, MOON
 # event: RISE, SET
