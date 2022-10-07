@@ -1,3 +1,4 @@
+from time import time
 import swisseph as swe
 import pytz
 import sqlite3
@@ -7,12 +8,6 @@ from array import *
 
 #Global tuple to save the currently called location. Interacts with getLocation and getLocationTest
 LOCATION = ()
-
-from time import time
-import swisseph as swe
-import pytz
-from datetime import datetime
-from array import *
 
 
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
