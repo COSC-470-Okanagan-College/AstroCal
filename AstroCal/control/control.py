@@ -6,7 +6,7 @@ from datetime import datetime
 from array import *
 
 #Global tuple to save the currently called location. Interacts with getLocation and getLocationTest
-location = ()
+LOCATION = ()
 
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
 # celestial: SUN, MOON
@@ -335,8 +335,8 @@ def getLocation(city, country):
         cur.execute("SELECT * FROM geonamesLocations WHERE city=? AND country=?", (city, country,))
     #Gets the first row of the query and assigns it to 'row' and global variable 'location' before it is returned
     row = cur.fetchone()
-    global location
-    location = row
+    global LOCATION
+    LOCATION = row
     return row
 
 def getLocationTest():
@@ -365,7 +365,7 @@ def getLocationTest():
     if getLocation("Tokyo", "Japan")[5] == 139.6917:
         print("Longitude test passed.")
     #Checks that the global variable is being updated upon getLocation() call
-    if getLocation("New York", "United States") == location:
+    if getLocation("New York", "United States") == LOCATION:
         print("Global variable test passed.")
 
 #getLocationTest() #Uncomment function to run test for the getLocation function
