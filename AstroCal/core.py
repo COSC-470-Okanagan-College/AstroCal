@@ -1,26 +1,21 @@
-import view
+import AstroCal.view.console_output as console_output
+import AstroCal.view.Calendar_ui as calendar
 import sys
 import kivy
 
 
+
+
 def run():
-    hello()
-    # print("Sun Rise and Set for Sept, 22")
-    # print(control.getRiseSet(2022, 9, 22, 'SUN', 'RISE'))
-    # print(control.getRiseSet(2022, 9, 22, 'SUN', 'SET'))
+    # Runs day page UI
+    #app = view.home
+    #app.run()
+    
+    # Runs UI
+    calendar.CalendarApp().run()
 
-    # print("Moon Rise and Set for Sept, 22")
-    # print(control.getRiseSet(2022, 9, 22, 'MOON', 'RISE'))
-    # print(control.getRiseSet(2022, 9, 22, 'MOON', 'SET'))
-    app = view.home
-    app.run()
-    #view.createMenu()
-    #runs everything
-    #app = view.mainApp()
-    #app.mainloop()
-
-def hello():
-    print("Hello, moon!")
+    # Runs Console
+    #console_output.main_menu()
 
 
 if __name__ == "__main__":
