@@ -370,22 +370,22 @@ def getLocationTest():
     """
     #Checks that the first item (City) returned is accurate
     if getLocation("Riyadh", "Saudi Arabia")[0] == "Riyadh":
-        print("City test passed.")
+        print("City test for Riyadh, Saudi Arabia passed. City is " + getLocation("Riyadh", "Saudi Arabia")[0] + ".")
     #Checks that the second item (Country) returned is accurate
     if getLocation("Sydney", "Australia")[1] == "Australia":
-        print("Country test passed.")
+        print("Country test for Sydney, Australia passed. Country is " + getLocation("Sydney", "Australia")[1] + ".")
     #Checks that the third item (Elevation) returned is accurate
     if getLocation("Vancouver", "Canada")[2] == 70:
-        print("Elevation test passed.")
+        print("Elevation test for Vancouver, Canada passed. Elevation is " + str(getLocation("Vancouver", "Canada")[2]) + "m.")
     #Checks that the fourth item (Timezone) returned is accurate
     if getLocation("Rio de Janeiro", "Brazil")[3] == "America/Sao_Paulo":
-        print("Timezone test passed.")
+        print("Timezone test for Rio de Janeiro, Brazil passed. Timezone is " + getLocation("Rio de Janeiro", "Brazil")[3] + ".")
     #Checks that the fifth item (Latitude) returned accurate
     if getLocation("Paris", "France")[4] == 48.8534:
-        print("Latitude test passed.")
+        print("Latitude test for Paris, France passed. Latitude is " + str(getLocation("Paris", "France")[4]) + ".")
     #Checks that the fifth item (Longitude) returned accurate
     if getLocation("Tokyo", "Japan")[5] == 139.6917:
-        print("Longitude test passed.")
+        print("Latitude test for Tokyo, Japan passed. Longitude is " + str(getLocation("Tokyo", "Japan")[5]) + ".")
     #Checks that the global variable is being updated upon getLocation() call
     if getLocation("New York", "United States") == LOCATION:
         print("Global variable test passed.")
