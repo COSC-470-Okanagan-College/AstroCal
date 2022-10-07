@@ -1,14 +1,14 @@
 import AstroCal.view.console_output as console_output
+import AstroCal.view.Calendar_ui as calendar
 import sys
 
 
 def run():
     # Runs UI
-    #app = view.tkGUI_Launch
-    # app.mainloop()
+    calendar.CalendarApp().run()
 
     # Runs Console
-    console_output.main_menu()
+    #console_output.main_menu()
 
 
 if __name__ == "__main__":
