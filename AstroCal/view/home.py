@@ -1,3 +1,4 @@
+from turtle import color
 import kivy
 import random
 
@@ -13,89 +14,112 @@ from kivy.uix.widget import *
 from kivy.uix.textinput import *
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.image import Image
+import kivy.utils as utils
 from datetime import datetime
 from control import control
 import pytz
-import sys
-import logging
 
 blue =  [0,0,1,1]
+pageBackground=utils.get_color_from_hex("#102646")
+navColor=utils.get_color_from_hex('#4575B1')
 
 class HBoxLayoutExample(App):
+    mainlayout = BoxLayout(orientation='vertical', height=800, width=800)
+    toplayout = BoxLayout(size_hint=(1, None))
+    middlelayout = BoxLayout(size_hint=(1,None),height=400,center_x=True)
+    bottomlayout = BoxLayout(size_hint=(1,None),height=75)
     def build(self):
-        mainlayout = BoxLayout(orientation='vertical', height=800, width=800)
-        toplayout = BoxLayout(size_hint=(1, None))
-        middlelayout = BoxLayout(size_hint=(1,None),height=400,orientation='vertical')
-        bottomlayout = BoxLayout(size_hint=(1,None),height=75)
     #Defines the 3 buttons for the bottom of the screen: day, month, event.
-        day = ToggleButton(text="DAY" ,
-                     size = (20,20), 
-                     background_color=blue,
-                     bold=True,
-                     group="bottomButtons")
+        day = ToggleButton(text="DAY",
+                    state='down',
+                    size = (20,20),
+                    font_size=20, 
+                    background_color=blue,
+                    bold=True,
+                    group="bottomButtons")
         day.bind(on_press=self.dayView)
         month = ToggleButton(text="MONTH" ,
                     size = (20,20), 
                     background_color=blue,
                     bold=True,
+                    font_size=20,
                     group="bottomButtons")
         month.bind(on_press=self.monthView)
         event = ToggleButton(text="EVENTS" ,
                     size = (20,20), 
                     background_color=blue,
                     bold=True,
+                    font_size=20,
                     group="bottomButtons")
         event.bind(on_press=self.eventView)
-        
-        bottomlayout.add_widget(day)
-        bottomlayout.add_widget(month)
-        bottomlayout.add_widget(event)
-    #Add display features to middle primary display window
-        dayInfo = BoxLayout(orientation="vertical",size_hint=(1,None),height=150)
-        dayImage = BoxLayout(size_hint=(1,None),height=250)
+        self.bottomlayout.add_widget(day)
+        self.bottomlayout.add_widget(month)
+        self.bottomlayout.add_widget(event)
+    #Add display features to middle primary display window (defaults to day view)
+        dayInfo = AnchorLayout(size_hint=(1,None),height=300,anchor_x='right',anchor_y='center')
+        dayImage = BoxLayout(orientation='vertical',size_hint=(1,None),height=300)
         wimg = Image(source="view/assets/moon_phases/full_moon.png",allow_stretch=True)
         dayImage.add_widget(wimg)
-
-        sunrise = Label(text="SUNRISE "+str(self.getSunRise().time()), 
+        info = Label(text="SUNRISE          0:00 AM\nSUNSET           0:00 AM\nMOONRISE     0:00 AM\nMOONSET       0:00 AM".format(),#str(self.getSunRise().time()), 
+                        bold=True,
+                        underline=True,
+                        font_size=20,
+                        line_height=2)
+        moonphase = Label(text="FULL MOON",
                         bold=True,
                         underline=True,
                         halign='left',
-                        outline_color=blue)
-        sunset = Label(text="SUNSET "+str(self.getSunSet().time()),bold=True,underline=True)
-        moonrise = Label(text="MOONRISE "+str(self.getMoonRise().time()),bold=True,underline=True)
-        moonset = Label(text="MOONSET "+str(self.getMoonSet().time()),bold=True,underline=True)
-        
-        dayInfo.add_widget(sunrise)
-        dayInfo.add_widget(sunset)
-        dayInfo.add_widget(moonrise)
-        dayInfo.add_widget(moonset)
-        middlelayout.add_widget(dayImage)
-        middlelayout.add_widget(dayInfo)
-       
+                        font_size=20,
+                        line_height=2,
+                        center_y=True)
+        dayImage.add_widget(moonphase)
+        dayInfo.add_widget(info)
+        self.middlelayout.add_widget(dayImage)
+        self.middlelayout.add_widget(dayInfo)
     #Add to top boxlayout
         topbtn = Button(text="Button" ,
                      size = (10,10), 
                      background_color=blue)
-        toplayout.add_widget(topbtn)
+        self.toplayout.add_widget(topbtn)
     #Add top,middle,bottom boxlayouts to mainlayout
-        mainlayout.add_widget(toplayout)
-        mainlayout.add_widget(middlelayout)
-        mainlayout.add_widget(bottomlayout)
-        return mainlayout
-
-    ## Functions to call specific fields
-    def dayView(self,middlelayout):
-        field = Label(text='Good Day')
-        middlelayout.add_widget(field)
-        
-    def monthView(self,middlelayout):
+        self.mainlayout.add_widget(self.toplayout)
+        self.mainlayout.add_widget(self.middlelayout)
+        self.mainlayout.add_widget(self.bottomlayout)
+        return self.mainlayout
+    ##Displays day view
+    def dayView(self,thing):
+        self.middlelayout.clear_widgets()
+        dayInfo = AnchorLayout(size_hint=(1,None),height=300,anchor_x='right',anchor_y='center')
+        dayImage = BoxLayout(orientation='vertical',size_hint=(1,None),height=300)
+        wimg = Image(source="view/assets/moon_phases/full_moon.png",allow_stretch=True)
+        dayImage.add_widget(wimg)
+        info = Label(text="SUNRISE          0:00 AM\nSUNSET           0:00 AM\nMOONRISE     0:00 AM\nMOONSET       0:00 AM".format(),#str(self.getSunRise().time()),
+                        bold=True,
+                        underline=True,
+                        font_size=20,
+                        line_height=2)
+        moonphase = Label(text="FULL MOON",
+                        bold=True,
+                        underline=True,
+                        halign='left',
+                        font_size=20,
+                        line_height=2,
+                        center_y=True)
+        dayImage.add_widget(moonphase)
+        dayInfo.add_widget(info)
+        self.middlelayout.add_widget(dayImage)
+        self.middlelayout.add_widget(dayInfo)
+    ## Display month view
+    def monthView(self,thing):
         field = Label(text='What a month')
-        middlelayout.add_widget(field)
-        
-    def eventView(self,middlelayout):
+        self.middlelayout.clear_widgets()
+        self.middlelayout.add_widget(field)
+    ## Display event view (placeholder)
+    def eventView(self,thing):
         field = Label(text='Whats the event')
-        middlelayout.add_widget(field)
-        
+        self.middlelayout.clear_widgets()
+        self.middlelayout.add_widget(field)
+    ## Functions to call specific fields (will need ot be removed or edited to new control)
     def getSunRise(self):
         now = datetime.now()
         sun_rise = control.getRiseSet(now.year, now.month, now.day, 'SUN', 'RISE')
@@ -126,6 +150,7 @@ class HBoxLayoutExample(App):
         timeUTC = datetime(date_tup[0], date_tup[1], date_tup[2], date_tup[3], date_tup[4], 0, 0, pytz.UTC)
         timeLocal = timeUTC.astimezone(timezone)
         return timeLocal
+   
 def run():
     #if __name__ == "__main__":
     app = HBoxLayoutExample()
