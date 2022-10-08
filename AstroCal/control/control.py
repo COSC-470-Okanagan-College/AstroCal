@@ -59,12 +59,17 @@ def getRiseSet(year, month, day, celestial, status):
     return utcTime
 
 
-def getDateOfNextFullMoon_UTC(year, month, day):
+def getDateOfNextFullMoon_UTC(year=0, month=0, day=0):
     """Return the date of the next full moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a fullmoon illumination level (99%)
     Checks for brightest hour and minute as well to correct for UTC time conversion."""
 
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
     # Converts UTC time into julian day number
     tjd = swe.julday(year, month, day, 0, swe.GREG_CAL)
     # Get the illumination of the moon (variable: illum) of the starting day to check if it is a full moon
@@ -112,7 +117,8 @@ def getDateOfNextFullMoon_UTC(year, month, day):
             max = temp
 
     tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
-    return swe.jdut1_to_utc(tjd, swe.GREG_CAL)
+    utc_time = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
+    return (utc_time[0], utc_time[1], utc_time[2])
 
 
 def getDaysTillFullMoon(year, month, day, timezone):
