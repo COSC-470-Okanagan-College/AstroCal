@@ -100,8 +100,9 @@ def moon_menu():
     print('1. View Today')
     print('2. Lunar Eclipse')
     print('3. View Moon Status')
-    print('4. Date of Next New Moon \n')
-    print('5. Back \n')
+    print('4. Date of Next New Moon')
+    print('5. Date of Next Full Moon \n')
+    print('6. Back \n')
     option = int(input('Enter selection: '))
     if option == 1:
         # Displays current date
@@ -132,6 +133,10 @@ def moon_menu():
         print("Next New Moon On: " +
               str(dateNewMoon[0]) + "-" + str(dateNewMoon[1]) + "-" + str(dateNewMoon[2]))
     elif option == 5:
+        dateFullMoon = control.getDateOfNextFullMoon_UTC()
+        print("Next Full Moon On: " +
+              str(dateFullMoon[0]) + "-" + str(dateFullMoon[1]) + "-" + str(dateFullMoon[2]))
+    elif option == 6:
         main_menu()
     else:
         print('error not an option')
