@@ -1,9 +1,14 @@
 from time import time
 import swisseph as swe
 import pytz
+import sqlite3
+from sqlite3 import Error
 from datetime import datetime
 from array import *
 
+#Global tuple to save the currently called location. Interacts with getLocation and getLocationTest
+#Uncomment the function call at the bottom to use the getLocation tests
+LOCATION = ()
 
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
 # celestial: SUN, MOON
@@ -319,3 +324,73 @@ def getDateOfNextNewMoon(year=0, month=0, day=0):
     utc = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
     newMoon_year, newMoon_month, newMoon_day = utc[0], utc[1], utc[2]
     return (newMoon_year, newMoon_month, newMoon_day)
+
+def getLocation(city, country):
+    """
+    Connects to the database 'locations.db' in the folder 'resources' and queries the
+    database to get the corresponding row and then assign it to the global variable 'location'
+    before returning a row of the database in the form of a tuple.
+
+    Table Columns:
+    1: 'City' as a string
+    2: 'Country' as a string
+    3: 'Elevation' (in meters) as an int
+    4: 'Timezone' as a string
+    5: 'Latitude' as a float
+    6: 'Longitude' as a float
+    """
+    #Assigns database path/name to the variable
+    database = "../AstroCal/resources/locations.db"
+    #Checks if the user has inputed England, Wales or Scotland, as the database saves them all as UK
+    #Ireland is a seperate entry from the other three countries
+    if country == "England" or country == "Wales" or country == "Scotland":
+        country = "United Kingdom"
+        
+    #Declares a connection to the database, None and the try and except are to minimize faulty calls
+    conn = None
+    try:
+        conn = sqlite3.connect(database)
+    except Error as e:
+        print(e)
+    #Checks that the connection is properly established, creates a cursor and then uses it to run a query on the database
+    with conn:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM geonamesLocations WHERE city=? AND country=?", (city, country,))
+    #Gets the first row of the query and assigns it to 'row' and global variable 'location' before it is returned
+    row = cur.fetchone()
+    global LOCATION
+    LOCATION = row
+    return row
+     
+def getLocationTest():
+    """
+    'Unit' tests as Fred, Mitchell and I discovered that trying to access a database from unit tests needs more work than it would be worth.
+    For in house testing, this will work and can be deleted before the product is delivered.
+
+    Function below commented out until needed. All tests pass at time of writing.
+    """
+    #Prints a full row from the table
+    print((f"A full row of the locations table looks like: %s" % (getLocation("Madrid", "Spain"),)))
+    #Checks that the first item (City) returned is accurate
+    if getLocation("Riyadh", "Saudi Arabia")[0] == "Riyadh":
+        print("City test for Riyadh, Saudi Arabia passed. City is " + getLocation("Riyadh", "Saudi Arabia")[0] + ".")
+    #Checks that the second item (Country) returned is accurate
+    if getLocation("Sydney", "Australia")[1] == "Australia":
+        print("Country test for Sydney, Australia passed. Country is " + getLocation("Sydney", "Australia")[1] + ".")
+    #Checks that the third item (Elevation) returned is accurate
+    if getLocation("Vancouver", "Canada")[2] == 70:
+        print("Elevation test for Vancouver, Canada passed. Elevation is " + str(getLocation("Vancouver", "Canada")[2]) + "m.")
+    #Checks that the fourth item (Timezone) returned is accurate
+    if getLocation("Rio de Janeiro", "Brazil")[3] == "America/Sao_Paulo":
+        print("Timezone test for Rio de Janeiro, Brazil passed. Timezone is " + getLocation("Rio de Janeiro", "Brazil")[3] + ".")
+    #Checks that the fifth item (Latitude) returned accurate
+    if getLocation("Paris", "France")[4] == 48.8534:
+        print("Latitude test for Paris, France passed. Latitude is " + str(getLocation("Paris", "France")[4]) + ".")
+    #Checks that the fifth item (Longitude) returned accurate
+    if getLocation("Tokyo", "Japan")[5] == 139.6917:
+        print("Latitude test for Tokyo, Japan passed. Longitude is " + str(getLocation("Tokyo", "Japan")[5]) + ".")
+    #Checks that the global variable is being updated upon getLocation() call
+    if getLocation("New York", "United States") == LOCATION:
+        print("Global variable test passed.")
+
+#getLocationTest() #Uncomment function to run test for the getLocation function
