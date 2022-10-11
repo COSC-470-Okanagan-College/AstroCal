@@ -1,4 +1,4 @@
 **/__pycache__/**
-**/.vscode/**
-**/.spyproject/config/workspace.ini
+.vscode/settings.json
+**/.spyproject/**
 venv/**
