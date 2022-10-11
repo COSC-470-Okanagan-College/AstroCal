@@ -5,7 +5,7 @@ from asyncio.windows_events import NULL
 from datetime import datetime, timedelta
 from gettext import find
 from pickle import TRUE
-from control import control
+from AstroCal.control import control
 import sys
 
 
