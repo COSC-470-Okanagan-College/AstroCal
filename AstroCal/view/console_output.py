@@ -1,8 +1,10 @@
 # Astro Calender Console Menu
 
 # Imports
+from asyncio.windows_events import NULL
 from datetime import datetime, timedelta
 from gettext import find
+from pickle import TRUE
 from control import control
 import sys
 
@@ -15,7 +17,7 @@ def main_menu():
     print('2. Moon Events')
     print('3. View Month')
     print('4. exit \n')
-    option = int(input('Enter selection: '))
+    option = getInput('Enter selection: ', NULL, int)
     if option == 1:
         sun_menu()
     elif option == 2:
@@ -30,6 +32,54 @@ def main_menu():
         main_menu()
 
 
+# Sanitizes input by requesting fpr inputType
+# message = message to display to user when asking for input
+# menu = menu that will show up after input fails. main_menu by default
+# inputType = declared by developer: (int, float, str). str by default
+# min = minimum value expected by the users input
+# max = maximum value expected by the users input
+def getInput(message=0, menu=0, input_type=0, min='zero', max='zero'):
+    get_input_success = True
+    if message == 0:  # Default message to user'
+        message = "Please enter input: "
+    if menu == 0:  # Default menu to re-display
+        menu = main_menu
+    user_input = input(message)
+
+    if input_type != 0:
+        get_input_success = checkInputType(user_input, input_type)
+        if get_input_success == True:
+            # converts input from str to input_type
+            user_input = input_type(user_input)
+    if min != 'zero' and max != 'zero':
+        get_input_success = restrictInputToRangeInclusive(
+            user_input, min, max)
+    if get_input_success == True:
+        return user_input
+    else:
+        input('Press enter to continue...')
+        menu()
+
+
+# raises exception if input type is wrong
+def checkInputType(user_input, input_type):
+    try:
+        input_type(user_input)
+        return True
+    except:
+        print("ERROR: Incorrect input type. Please try again.")
+        return False
+
+
+# raises exception if input is not within range
+def restrictInputToRangeInclusive(user_input, min, max):
+    if user_input < min or user_input > max:
+        print("ERROR: Please type a number between (" +
+              str(min) + "-" + str(max) + ").")
+        return False
+    return True
+
+
 # sun options
 def sun_menu():
     print('Sun Events')
@@ -37,7 +87,7 @@ def sun_menu():
     print('2. Solar Eclipse')
     print('3. Day Lengths')
     print('4. Back \n')
-    option = int(input('Enter selection: '))
+    option = getInput('Enter selection: ', NULL, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
@@ -59,31 +109,33 @@ def sun_menu():
         print("\tEnd:\t\t" + str(sol_eclipse_end))
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 3:
-        amountOfDays = int(input('Enter amount of days: '))
-        year, month, day = get_current_year_month_day()
-        currentDay = datetime(year, month, day)
-        dayLengths = control.getVariableDayLength(
-            year, month, day, amountOfDays)
-        for i in range(0, amountOfDays):
-            currentDay = datetime.now()
-            currentDay += timedelta(days=i)
+        amountOfDays = getInput(
+            'Enter amount of days (up to 500): ', sun_menu, int, 0, 10)
+        if amountOfDays != False:
+            year, month, day = get_current_year_month_day()
+            currentDay = datetime(year, month, day)
+            dayLengths = control.getVariableDayLength(
+                year, month, day, amountOfDays)
+            for i in range(0, amountOfDays):
+                currentDay = datetime.now()
+                currentDay += timedelta(days=i)
 
-            sun_rise_time = control.celestial_rise_or_set(
-                'SUN', 'RISE', currentDay.year, currentDay.month, currentDay.day)[0]
-            sun_set_time = control.celestial_rise_or_set(
-                'SUN', 'SET', currentDay.year, currentDay.month, currentDay.day)[0]
+                sun_rise_time = control.celestial_rise_or_set(
+                    'SUN', 'RISE', currentDay.year, currentDay.month, currentDay.day)[0]
+                sun_set_time = control.celestial_rise_or_set(
+                    'SUN', 'SET', currentDay.year, currentDay.month, currentDay.day)[0]
 
-            print("".ljust(40, '='))
-            print("{}, {}, {}".format(currentDay.strftime("%B"),
-                  currentDay.day, currentDay.year))
-            print("".ljust(40, '='))
-            print("{:<10} | {:<10} | {:<12}".format(
-                'Day Begin', 'Day End', 'Length of Day'))
-            print("".ljust(40, '-'))
-            print("{:<10} | {:<10} | {:<12}".format(
-                format_24hour_time_output(sun_rise_time),
-                format_24hour_time_output(sun_set_time),
-                str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n"))
+                print("".ljust(40, '='))
+                print("{}, {}, {}".format(currentDay.strftime("%B"),
+                                          currentDay.day, currentDay.year))
+                print("".ljust(40, '='))
+                print("{:<10} | {:<10} | {:<12}".format(
+                    'Day Begin', 'Day End', 'Length of Day'))
+                print("".ljust(40, '-'))
+                print("{:<10} | {:<10} | {:<12}".format(
+                    format_24hour_time_output(sun_rise_time),
+                    format_24hour_time_output(sun_set_time),
+                    str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n"))
 
     elif option == 4:
         main_menu()
@@ -103,7 +155,7 @@ def moon_menu():
     print('4. Date of Next New Moon')
     print('5. Date of Next Full Moon \n')
     print('6. Back \n')
-    option = int(input('Enter selection: '))
+    option = getInput('Enter selection: ', NULL, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
