@@ -32,54 +32,6 @@ def main_menu():
         main_menu()
 
 
-# Sanitizes input by requesting fpr inputType
-# message = message to display to user when asking for input
-# menu = menu that will show up after input fails. main_menu by default
-# inputType = declared by developer: (int, float, str). str by default
-# min = minimum value expected by the users input
-# max = maximum value expected by the users input
-def getInput(message=0, menu=0, input_type=0, min='zero', max='zero'):
-    get_input_success = True
-    if message == 0:  # Default message to user'
-        message = "Please enter input: "
-    if menu == 0:  # Default menu to re-display
-        menu = main_menu
-    user_input = input(message)
-
-    if input_type != 0:
-        get_input_success = checkInputType(user_input, input_type)
-        if get_input_success == True:
-            # converts input from str to input_type
-            user_input = input_type(user_input)
-    if min != 'zero' and max != 'zero':
-        get_input_success = restrictInputToRangeInclusive(
-            user_input, min, max)
-    if get_input_success == True:
-        return user_input
-    else:
-        input('Press enter to continue...')
-        menu()
-
-
-# raises exception if input type is wrong
-def checkInputType(user_input, input_type):
-    try:
-        input_type(user_input)
-        return True
-    except:
-        print("ERROR: Incorrect input type. Please try again.")
-        return False
-
-
-# raises exception if input is not within range
-def restrictInputToRangeInclusive(user_input, min, max):
-    if user_input < min or user_input > max:
-        print("ERROR: Please type a number between (" +
-              str(min) + "-" + str(max) + ").")
-        return False
-    return True
-
-
 # sun options
 def sun_menu():
     print('Sun Events')
@@ -268,3 +220,51 @@ def format_24hour_time_output(time):
     else:
         minute_str = str(time.minute)
     return hour_str + ':' + minute_str
+
+
+# Sanitizes input by requesting fpr inputType
+# message = message to display to user when asking for input
+# menu = menu that will show up after input fails. main_menu by default
+# inputType = declared by developer: (int, float, str). str by default
+# min = minimum value expected by the users input
+# max = maximum value expected by the users input
+def getInput(message=0, menu=0, input_type=0, min='zero', max='zero'):
+    get_input_success = True
+    if message == 0:  # Default message to user'
+        message = "Please enter input: "
+    if menu == 0:  # Default menu to re-display
+        menu = main_menu
+    user_input = input(message)
+
+    if input_type != 0:
+        get_input_success = checkInputType(user_input, input_type)
+        if get_input_success == True:
+            # converts input from str to input_type
+            user_input = input_type(user_input)
+    if min != 'zero' and max != 'zero':
+        get_input_success = restrictInputToRangeInclusive(
+            user_input, min, max)
+    if get_input_success == True:
+        return user_input
+    else:
+        input('Press enter to continue...')
+        menu()
+
+
+# raises exception if input type is wrong
+def checkInputType(user_input, input_type):
+    try:
+        input_type(user_input)
+        return True
+    except:
+        print("ERROR: Incorrect input type. Please try again.")
+        return False
+
+
+# raises exception if input is not within range
+def restrictInputToRangeInclusive(user_input, min, max):
+    if user_input < min or user_input > max:
+        print("ERROR: Please type a number between (" +
+              str(min) + "-" + str(max) + ").")
+        return False
+    return True
