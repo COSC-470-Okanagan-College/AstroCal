@@ -5,24 +5,32 @@ from datetime import datetime, timedelta
 from gettext import find
 from control import control
 import sys
+from constants.globals import DATE
 
 
 # Main Menu
 def main_menu():
+    global DATE
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
-    get_current_date_formatted()
+    print("Date Selected: " + get_date_formatted(DATE))
     print('1. Sun Events')
     print('2. Moon Events')
     print('3. View Month')
-    print('4. exit \n')
+    print('4. Change Date')
+    print('5. exit \n')
     option = int(input('Enter selection: '))
     if option == 1:
         sun_menu()
     elif option == 2:
         moon_menu()
     elif option == 3:
-        getCurrentMonth()
+        getMonth()
     elif option == 4:
+        DATE = getDateFromUser()
+        print("New Date: " + get_date_formatted(DATE))
+        input('Press enter to continue...')
+        main_menu()
+    elif option == 5:
         print('Bye')
         sys.exit(0)
     else:
@@ -33,6 +41,7 @@ def main_menu():
 # sun options
 def sun_menu():
     print('Sun Events')
+    print("Date Selected: " + get_date_formatted(DATE))
     print('1. View Today')
     print('2. Solar Eclipse')
     print('3. Day Lengths')
@@ -40,19 +49,20 @@ def sun_menu():
     option = int(input('Enter selection: '))
     if option == 1:
         # Displays current date
-        print(get_current_date_formatted())
+        print(get_date_formatted(DATE))
         # call function name for moon rise
         sun_rise_time, sun_rise_day = control.celestial_rise_or_set(
-            'SUN', 'RISE')
+            'SUN', 'RISE', DATE.year, DATE.month, DATE.day)
         print('Sun will Rise: ' + format_24hour_time_output(sun_rise_time) +
               " Days: " + str(sun_rise_day))
         # call function name for moon set
         sun_set_time, sun_set_day = control.celestial_rise_or_set(
-            'SUN', 'SET')
+            'SUN', 'SET', DATE.year, DATE.month, DATE.day)
         print('Sun will Set : ' + format_24hour_time_output(sun_set_time) +
               " Days: " + str(sun_set_day))
     elif option == 2:
-        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc()
+        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc(
+            DATE.year, DATE.month, DATE.day)
         print("Solar Eclipse:")
         print("\tStart:\t\t" + str(sol_eclipse_start))
         print("\tTotality:\t" + str(sol_eclipse_max))
@@ -60,12 +70,11 @@ def sun_menu():
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 3:
         amountOfDays = int(input('Enter amount of days: '))
-        year, month, day = get_current_year_month_day()
-        currentDay = datetime(year, month, day)
+        currentDay = DATE
         dayLengths = control.getVariableDayLength(
-            year, month, day, amountOfDays)
+            amountOfDays, DATE.year, DATE.month, DATE.day)
         for i in range(0, amountOfDays):
-            currentDay = datetime.now()
+            currentDay = DATE
             currentDay += timedelta(days=i)
 
             sun_rise_time = control.celestial_rise_or_set(
@@ -97,6 +106,7 @@ def sun_menu():
 # moon options
 def moon_menu():
     print('Moon Events')
+    print("Date Selected: " + get_date_formatted(DATE))
     print('1. View Today')
     print('2. Lunar Eclipse')
     print('3. View Moon Status')
@@ -106,34 +116,38 @@ def moon_menu():
     option = int(input('Enter selection: '))
     if option == 1:
         # Displays current date
-        print(get_current_date_formatted())
+        print(get_date_formatted(DATE))
         # call function name for moon rise
         moon_rise_time, moon_rise_day = control.celestial_rise_or_set(
-            'MOON', 'RISE')
+            'MOON', 'RISE', DATE.year, DATE.month, DATE.day)
         print('Moon will Rise: ' + format_24hour_time_output(moon_rise_time) +
               " Days: " + str(moon_rise_day))
         # call function name for moon set
         moon_set_time, moon_set_day = control.celestial_rise_or_set(
-            'MOON', 'SET')
+            'MOON', 'SET', DATE.year, DATE.month, DATE.day)
         print('Moon will Set : ' + format_24hour_time_output(moon_set_time) +
               " Days: " + str(moon_set_day))
     elif option == 2:
-        lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipseLoc()
+        lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipseLoc(
+            DATE.year, DATE.month, DATE.day)
         print("Lunar Eclipse:")
         print("\tStart:\t\t" + str(lun_eclipse_start))
         print("\tTotality:\t" + str(lun_eclipse_max))
         print("\tEnd:\t\t" + str(lun_eclipse_end))
         print("\tDuration:\t" + str(lun_eclipse_duration))
     elif option == 3:
-        moon_status_result = control.getMoonStatus()
+        moon_status_result = control.getMoonStatus(
+            DATE.year, DATE.month, DATE.day)
         print(moon_status_result[0])
         print(moon_status_result[1])
     elif option == 4:
-        dateNewMoon = control.getDateOfNextNewMoon()
+        dateNewMoon = control.getDateOfNextNewMoon(
+            DATE.year, DATE.month, DATE.day)
         print("Next New Moon On: " +
               str(dateNewMoon[0]) + "-" + str(dateNewMoon[1]) + "-" + str(dateNewMoon[2]))
     elif option == 5:
-        dateFullMoon = control.getDateOfNextFullMoon_UTC()
+        dateFullMoon = control.getDateOfNextFullMoon_UTC(
+            DATE.year, DATE.month, DATE.day)
         print("Next Full Moon On: " +
               str(dateFullMoon[0]) + "-" + str(dateFullMoon[1]) + "-" + str(dateFullMoon[2]))
     elif option == 6:
@@ -146,12 +160,11 @@ def moon_menu():
 
 
 # Displays the overall output for each day of the current month
-def getCurrentMonth():
+def getMonth():
     # Get Current Month & Year
-    now = datetime.now()
-    month_str = now.strftime("%B")
-    month = now.month
-    year = now.year
+    month_str = DATE.strftime("%B")
+    month = DATE.month
+    year = DATE.year
     same_day = ""
     next_day = "Next Day"
 
@@ -199,9 +212,10 @@ def get_current_year_month_day():
 
 
 # get current date
-def get_current_date_formatted():
-    currentdate = datetime.now()
-    today = currentdate.strftime("%B-%d-%Y  %H:%M \n")
+def get_date_formatted(date=0):
+    if date == 0:
+        date = datetime.now()
+    today = date.strftime("%B-%d-%Y  %H:%M \n")
     return today
 
 
@@ -216,3 +230,14 @@ def format_24hour_time_output(time):
     else:
         minute_str = str(time.minute)
     return hour_str + ':' + minute_str
+
+
+# Gets date from the user
+def getDateFromUser():
+    year = int(input('Enter year: '))
+    month = int(input('Enter month (1-12): '))
+    day = int(input('Enter day (1-31): '))
+    # Needs sanitizing for 31 days or 30 days
+    # Needs sanitizing for input types
+    # Year needs to be within a range
+    return datetime(year, month, day)
