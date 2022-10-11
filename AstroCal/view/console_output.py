@@ -11,7 +11,7 @@ import sys
 
 # Main Menu
 def main_menu():
-    print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
+    print('✧ ･ﾟ * ✧  ASTRO CALENDAR  ✧ ･ﾟ * ✧ ･ﾟ \n')
     get_current_date_formatted()
     print('1. Sun Events')
     print('2. Moon Events')
