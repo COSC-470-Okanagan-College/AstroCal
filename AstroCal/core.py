@@ -2,7 +2,6 @@ import AstroCal.view.console_output as console_output
 import AstroCal.view.Calendar_ui as calendar
 import AstroCal.view.home as home
 import sys
-import kivy
 
 
 def run():
@@ -11,10 +10,12 @@ def run():
     # app.run()
 
     # Runs UI
-    # calendar.CalendarApp().run()
+    calendar.CalendarApp().run()
 
     # Runs Console
-    console_output.main_menu()
+    # console_output.main_menu()
+
+
 
 
 if __name__ == "__main__":
