@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 import unittest
-
 from AstroCal.control.control import getWhenSolEclipseLoc, getWhenLunEclipseLoc
 
 
