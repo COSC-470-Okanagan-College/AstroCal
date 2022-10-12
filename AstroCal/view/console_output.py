@@ -16,7 +16,7 @@ def main_menu():
     print('1. Sun Events')
     print('2. Moon Events')
     print('3. View Month')
-    print('4. exit \n')
+    print('4. Exit \n')
     option = getInput('Enter selection: ', NULL, int)
     if option == 1:
         sun_menu()
@@ -62,7 +62,7 @@ def sun_menu():
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 3:
         amountOfDays = getInput(
-            'Enter amount of days (up to 500): ', sun_menu, int, 0, 10)
+            'Enter amount of days (up to 500): ', sun_menu, int, 0, 500)
         if amountOfDays != False:
             year, month, day = get_current_year_month_day()
             currentDay = datetime(year, month, day)
@@ -228,7 +228,7 @@ def format_24hour_time_output(time):
 # inputType = declared by developer: (int, float, str). str by default
 # min = minimum value expected by the users input
 # max = maximum value expected by the users input
-def getInput(message=0, menu=0, input_type=0, min='zero', max='zero'):
+def getInput(message=0, menu=0, input_type=0, min='zero', max='zero', default_user_input='zero'):
     get_input_success = True
     if message == 0:  # Default message to user'
         message = "Please enter input: "
