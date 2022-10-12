@@ -164,7 +164,7 @@ def getCurrentMonth():
                          datetime(year, month, 1)).days
 
     #Print Out headers
-    print("{:<20} | {:<8} | {:<8} | {:<8} | {:<8} | {:<8}".format("Date", "Sunrise", "Sunset", "Moonrise", "Moonset", "Day"))
+    print("{:<20} | {:<8} | {:<8} | {:<8} | {:<8} | {:<8} | {:<8}".format("Date", "Sunrise", "Sunset", "Moonrise", "Moonset", "Moon Phase", "Day"))
     # Print out info for each day in the month
     for day in range(days_in_month):
         day += 1
@@ -176,14 +176,16 @@ def getCurrentMonth():
             'MOON', 'RISE', year, month, day)
         moon_set_time, moon_set_day = control.celestial_rise_or_set(
             'MOON', 'SET', year, month, day)
+        moon_status = round(control.getMoonStatusHelper(year, month, day), 2)
         date = "{} {}, {}".format(month_str, day, year)
 
-        print("{:<20} | {:<8} | {:<8} | {:<8} | {:<8} | {:<8}".format(
+        print("{:<20} | {:<8} | {:<8} | {:<8} | {:<8} | {:<10} | {:<8}".format(
             date,
             format_24hour_time_output(sun_rise_time),
             format_24hour_time_output(sun_set_time),
             format_24hour_time_output(moon_rise_time),
             format_24hour_time_output(moon_set_time),
+            moon_status,
             (same_day if day == sun_rise_day else "Sunrise " + next_day + " ") + (same_day if day == sun_set_day else "Sunset " + next_day + " ") +
             (same_day if day == moon_rise_day else "Moonrise " + next_day + " ") + (same_day if day == moon_set_day else "Moonset " + next_day),
         ))
