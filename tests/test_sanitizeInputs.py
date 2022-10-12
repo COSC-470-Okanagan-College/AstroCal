@@ -1,6 +1,5 @@
 import unittest
 from unittest.mock import patch
-import AstroCal.view.console_output
 from AstroCal.view.console_output import checkInputType, restrictInputToRangeInclusive, getInputSanitized
 
 
