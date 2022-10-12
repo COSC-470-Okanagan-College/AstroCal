@@ -12,7 +12,7 @@ import os
 # Main Menu
 def main_menu():
     clear()
-    print('✧ ･ﾟ * ✧  ASTRO CALENDAR  ✧ ･ﾟ * ✧ ･ﾟ \n')
+    print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Main Menu')
     get_current_date_formatted()
     print('1. Sun Events')
