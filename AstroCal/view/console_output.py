@@ -17,7 +17,7 @@ def main_menu():
     get_current_date_formatted()
     print('1. Sun Events')
     print('2. Moon Events')
-    print('3. View Month')
+    print('3. View Month\n')
     print('4. Exit \n')
     option = getInputSanitized('Enter selection: ', None, int)
     if option == 1:
@@ -43,7 +43,7 @@ def sun_menu():
     print('Sun Events')
     print('1. View Today')
     print('2. Solar Eclipse')
-    print('3. Day Lengths')
+    print('3. Day Lengths\n')
     print('4. Back \n')
     option = getInputSanitized('Enter selection: ', None, int)
     if option == 1:
