@@ -17,8 +17,8 @@ LOCATION = ()
 # Returns time_unformatted and the day the event happens on
 
 
-def celestial_rise_or_set(celestial, event, year=0, month=0, day=0):
-    if year == 0 & month == 0 & day == 0:
+def celestial_rise_or_set(celestial, event, year=None, month=None, day=None):
+    if ((year == None)) & ((month == None)) & ((day == None)):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -61,13 +61,13 @@ def getRiseSet(year, month, day, celestial, status):
     return utcTime
 
 
-def getDateOfNextFullMoon_UTC(year=0, month=0, day=0):
+def getDateOfNextFullMoon_UTC(year=None, month=None, day=None):
     """Return the date of the next full moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a fullmoon illumination level (99%)
     Checks for brightest hour and minute as well to correct for UTC time conversion."""
 
-    if year == 0 & month == 0 & day == 0:
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -144,8 +144,8 @@ def getDaysTillFullMoon(year, month, day, timezone):
 
 # Gets string of data relating to time of solar eclipse
 # Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
-def getWhenSolEclipseLoc(year=0, month=0, day=0):
-    if year == 0 & month == 0 & day == 0:
+def getWhenSolEclipseLoc(year=None, month=None, day=None):
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -172,8 +172,8 @@ def getWhenSolEclipseLoc(year=0, month=0, day=0):
 
 # Gets string of data relating to time of Lunar eclipse
 # Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
-def getWhenLunEclipseLoc(year=0, month=0, day=0):
-    if year == 0 & month == 0 & day == 0:
+def getWhenLunEclipseLoc(year=None, month=None, day=None):
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -272,12 +272,12 @@ def getVariableDayLength(year, month, day, amountOfDays):
     return amountOfDayLight
 
 
-def getDateOfNextNewMoon(year=0, month=0, day=0):
+def getDateOfNextNewMoon(year=None, month=None, day=None):
     """Return the date of the next new moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a new moon illumination level (~0%)
     Checks for dimmest hour and minute as well to correct for UTC time conversion."""
-    if year == 0 & month == 0 & day == 0:
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month

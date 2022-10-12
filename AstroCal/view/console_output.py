@@ -45,7 +45,7 @@ def sun_menu():
     print('2. Solar Eclipse')
     print('3. Day Lengths\n')
     print('4. Back \n')
-    option = getInputSanitized('Enter selection: ', None, int)
+    option = getInputSanitized('Enter selection: ', sun_menu, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
@@ -99,6 +99,7 @@ def sun_menu():
         main_menu()
     else:
         print('ERROR: not an option')
+        input('Press enter to continue...')
         sun_menu()
     input('Press enter to continue...')
     main_menu()
@@ -115,7 +116,7 @@ def moon_menu():
     print('4. Date of Next New Moon')
     print('5. Date of Next Full Moon \n')
     print('6. Back \n')
-    option = getInputSanitized('Enter selection: ', None, int)
+    option = getInputSanitized('Enter selection: ', moon_menu, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
@@ -152,7 +153,8 @@ def moon_menu():
         main_menu()
     else:
         print('ERROR: not an option')
-        sun_menu()
+        input('Press enter to continue...')
+        moon_menu()
     input('Press enter to continue...')
     main_menu()
 
@@ -235,28 +237,28 @@ def format_24hour_time_output(time):
 # inputType = declared by developer: (int, float, str). str by default
 # min = minimum value expected by the users input
 # max = maximum value expected by the users input
-def getInputSanitized(message=0, menu=0, input_type=0, min='zero', max='zero', default_user_input='zero'):
+def getInputSanitized(message=None, menu=None, input_type=None, min=None, max=None, default_user_input=None):
     get_input_success = True
-    if message == 0:  # Default message to user'
+    if message == None:  # Default message to user'
         message = "Please enter input: "
-    if menu == 0:  # Default menu to re-display
+    if menu == None:  # Default menu to re-display
         menu = main_menu
     # Get Input
     user_input = getInput(message)
     # Input is empty
-    if user_input == '' and default_user_input != "zero":
+    if user_input == '' and default_user_input != None:
         user_input = default_user_input
     elif user_input == '':
         print("You entered nothing.")
         get_input_success = False
     # Input is wrong type
-    if input_type != 0 and get_input_success != False:
+    if input_type != None and get_input_success != False:
         get_input_success = checkInputType(user_input, input_type)
         if get_input_success == True:
             # converts input from str to input_type
             user_input = input_type(user_input)
     # Input is in range
-    if min != 'zero' and max != 'zero' and get_input_success != False and input_type != 0:
+    if min != None and max != None and get_input_success != False and input_type != None:
         get_input_success = restrictInputToRangeInclusive(
             user_input, min, max)
     # All tests pass
