@@ -7,39 +7,46 @@ from gettext import find
 from pickle import TRUE
 from AstroCal.control import control
 import sys
+import os
 
 
 # Main Menu
 def main_menu():
+    clear()
     print('✧ ･ﾟ * ✧  ASTRO CALENDAR  ✧ ･ﾟ * ✧ ･ﾟ \n')
+    print('Main Menu')
     get_current_date_formatted()
     print('1. Sun Events')
     print('2. Moon Events')
     print('3. View Month')
     print('4. Exit \n')
-    option = getInput('Enter selection: ', NULL, int)
+    option = getInputSanitized('Enter selection: ', NULL, int)
     if option == 1:
         sun_menu()
     elif option == 2:
         moon_menu()
     elif option == 3:
         getCurrentMonth()
+        input('Press enter to continue...')
+        main_menu()
     elif option == 4:
         print('Bye')
         sys.exit(0)
     else:
-        print('error not an option')
+        print('ERROR: not an option')
         main_menu()
 
 
 # sun options
 def sun_menu():
+    clear()
+    print('✧ ･ﾟ * ✧  ASTRO CALENDAR  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Sun Events')
     print('1. View Today')
     print('2. Solar Eclipse')
     print('3. Day Lengths')
     print('4. Back \n')
-    option = getInput('Enter selection: ', NULL, int)
+    option = getInputSanitized('Enter selection: ', NULL, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
@@ -61,7 +68,7 @@ def sun_menu():
         print("\tEnd:\t\t" + str(sol_eclipse_end))
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 3:
-        amountOfDays = getInput(
+        amountOfDays = getInputSanitized(
             'Enter amount of days (up to 500): ', sun_menu, int, 0, 500)
         if amountOfDays != False:
             year, month, day = get_current_year_month_day()
@@ -92,7 +99,7 @@ def sun_menu():
     elif option == 4:
         main_menu()
     else:
-        print('error not an option')
+        print('ERROR: not an option')
         sun_menu()
     input('Press enter to continue...')
     main_menu()
@@ -100,6 +107,8 @@ def sun_menu():
 
 # moon options
 def moon_menu():
+    clear()
+    print('✧ ･ﾟ * ✧  ASTRO CALENDAR  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Moon Events')
     print('1. View Today')
     print('2. Lunar Eclipse')
@@ -107,7 +116,7 @@ def moon_menu():
     print('4. Date of Next New Moon')
     print('5. Date of Next Full Moon \n')
     print('6. Back \n')
-    option = getInput('Enter selection: ', NULL, int)
+    option = getInputSanitized('Enter selection: ', NULL, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
@@ -143,7 +152,7 @@ def moon_menu():
     elif option == 6:
         main_menu()
     else:
-        print('error not an option')
+        print('ERROR: not an option')
         sun_menu()
     input('Press enter to continue...')
     main_menu()
@@ -193,7 +202,6 @@ def getCurrentMonth():
         print("{:<12} | {:<12} | {:<12}".format(
             "Moonset", format_24hour_time_output(moon_set_time), same_day if day == moon_set_day else next_day))
         print()
-    main_menu()
 
 
 # Get current year, month, day
@@ -228,27 +236,41 @@ def format_24hour_time_output(time):
 # inputType = declared by developer: (int, float, str). str by default
 # min = minimum value expected by the users input
 # max = maximum value expected by the users input
-def getInput(message=0, menu=0, input_type=0, min='zero', max='zero', default_user_input='zero'):
+def getInputSanitized(message=0, menu=0, input_type=0, min='zero', max='zero', default_user_input='zero'):
     get_input_success = True
     if message == 0:  # Default message to user'
         message = "Please enter input: "
     if menu == 0:  # Default menu to re-display
         menu = main_menu
-    user_input = input(message)
-
-    if input_type != 0:
+    # Get Input
+    user_input = getInput(message)
+    # Input is empty
+    if user_input == '' and default_user_input != "zero":
+        user_input = default_user_input
+    elif user_input == '':
+        print("You entered nothing.")
+        get_input_success = False
+    # Input is wrong type
+    if input_type != 0 and get_input_success != False:
         get_input_success = checkInputType(user_input, input_type)
         if get_input_success == True:
             # converts input from str to input_type
             user_input = input_type(user_input)
-    if min != 'zero' and max != 'zero':
+    # Input is in range
+    if min != 'zero' and max != 'zero' and get_input_success != False and input_type != 0:
         get_input_success = restrictInputToRangeInclusive(
             user_input, min, max)
+    # All tests pass
     if get_input_success == True:
         return user_input
     else:
         input('Press enter to continue...')
         menu()
+
+
+# Raw input from user
+def getInput(message):
+    return input(message)
 
 
 # raises exception if input type is wrong
@@ -268,3 +290,7 @@ def restrictInputToRangeInclusive(user_input, min, max):
               str(min) + "-" + str(max) + ").")
         return False
     return True
+
+
+# Clears console when called
+def clear(): return os.system('cls')

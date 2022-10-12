@@ -1,6 +1,7 @@
 import unittest
-
-from AstroCal.view.console_output import checkInputType, restrictInputToRangeInclusive
+from unittest.mock import patch
+import AstroCal.view.console_output
+from AstroCal.view.console_output import checkInputType, restrictInputToRangeInclusive, getInputSanitized
 
 
 class TestSanitizeInputs(unittest.TestCase):
@@ -35,3 +36,34 @@ class TestSanitizeInputs(unittest.TestCase):
                                                        0, 100), False, "Lower than min Failed")
         self.assertEqual(restrictInputToRangeInclusive(
             101, 0, 100), False, "Higher than max Failed")
+
+    @patch('AstroCal.view.console_output.getInput', return_value='2')
+    def test_getInput_rawInput_int(self, return_value):
+        self.assertEqual(getInputSanitized(), '2', "Test Failed")
+
+    @patch('AstroCal.view.console_output.getInput', return_value='2')
+    def test_getInput_correctType_int_success(self, return_value):
+        self.assertEqual(getInputSanitized(0, 0, int), 2, "Test Failed")
+
+    @patch('AstroCal.view.console_output.getInput', return_value='2')
+    def test_getInput_correctType_int_failed(self, return_value):
+        self.assertNotEqual(getInputSanitized(0, 0, 0), 2, "Test Failed")
+
+    @patch('AstroCal.view.console_output.getInput', return_value='2')
+    def test_getInput_noInput_noDefault(self, return_value):
+        self.assertNotEqual(getInputSanitized(0, 0, 0), '', "Test Failed")
+
+    @patch('AstroCal.view.console_output.getInput', return_value='')
+    def test_getInput_noInput_withDefault(self, return_value):
+        self.assertEqual(getInputSanitized(
+            0, 0, 0, "zero", "zero", "Testing"), 'Testing', "Test Failed")
+
+    @patch('AstroCal.view.console_output.getInput', return_value='2')
+    def test_getInput_withInput_withDefault(self, return_value):
+        self.assertEqual(getInputSanitized(
+            0, 0, 0, "zero", "zero", "Testing"), '2', "Test Failed")
+
+    @patch('AstroCal.view.console_output.getInput', return_value='2')
+    def test_getInput_withRange_inRange(self, return_value):
+        self.assertEqual(getInputSanitized(
+            0, 0, int, 0, 20), 2, "Test Failed")
