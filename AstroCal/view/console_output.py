@@ -184,8 +184,8 @@ def getCurrentMonth():
             format_24hour_time_output(sun_set_time),
             format_24hour_time_output(moon_rise_time),
             format_24hour_time_output(moon_set_time),
-            (same_day if day == sun_rise_day else "Sunrise " + next_day) + (same_day if day == sun_set_day else "Sunset " + next_day) +
-            (same_day if day == moon_rise_day else "Moonrise " + next_day) +  (same_day if day == moon_set_day else "Moonset " + next_day),
+            (same_day if day == sun_rise_day else "Sunrise " + next_day + " ") + (same_day if day == sun_set_day else "Sunset " + next_day + " ") +
+            (same_day if day == moon_rise_day else "Moonrise " + next_day + " ") + (same_day if day == moon_set_day else "Moonset " + next_day),
         ))
     main_menu()
 
