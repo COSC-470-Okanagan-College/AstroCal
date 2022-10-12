@@ -1,7 +1,6 @@
 # Astro Calender Console Menu
 
 # Imports
-from asyncio.windows_events import NULL
 from datetime import datetime, timedelta
 from gettext import find
 from pickle import TRUE
@@ -20,7 +19,7 @@ def main_menu():
     print('2. Moon Events')
     print('3. View Month')
     print('4. Exit \n')
-    option = getInputSanitized('Enter selection: ', NULL, int)
+    option = getInputSanitized('Enter selection: ', None, int)
     if option == 1:
         sun_menu()
     elif option == 2:
@@ -46,7 +45,7 @@ def sun_menu():
     print('2. Solar Eclipse')
     print('3. Day Lengths')
     print('4. Back \n')
-    option = getInputSanitized('Enter selection: ', NULL, int)
+    option = getInputSanitized('Enter selection: ', None, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
@@ -116,7 +115,7 @@ def moon_menu():
     print('4. Date of Next New Moon')
     print('5. Date of Next Full Moon \n')
     print('6. Back \n')
-    option = getInputSanitized('Enter selection: ', NULL, int)
+    option = getInputSanitized('Enter selection: ', None, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
