@@ -42,27 +42,29 @@ class TestSanitizeInputs(unittest.TestCase):
 
     @patch('AstroCal.view.console_output.getInput', return_value='2')
     def test_getInput_correctType_int_success(self, return_value):
-        self.assertEqual(getInputSanitized(0, 0, int), 2, "Test Failed")
+        self.assertEqual(getInputSanitized(None, None, int), 2, "Test Failed")
 
     @patch('AstroCal.view.console_output.getInput', return_value='2')
     def test_getInput_correctType_int_failed(self, return_value):
-        self.assertNotEqual(getInputSanitized(0, 0, 0), 2, "Test Failed")
+        self.assertNotEqual(getInputSanitized(
+            None, None, None), 2, "Test Failed")
 
     @patch('AstroCal.view.console_output.getInput', return_value='2')
     def test_getInput_noInput_noDefault(self, return_value):
-        self.assertNotEqual(getInputSanitized(0, 0, 0), '', "Test Failed")
+        self.assertNotEqual(getInputSanitized(
+            None, None, None), '', "Test Failed")
 
     @patch('AstroCal.view.console_output.getInput', return_value='')
     def test_getInput_noInput_withDefault(self, return_value):
         self.assertEqual(getInputSanitized(
-            0, 0, 0, "zero", "zero", "Testing"), 'Testing', "Test Failed")
+            None, None, None, None, None, "Testing"), 'Testing', "Test Failed")
 
     @patch('AstroCal.view.console_output.getInput', return_value='2')
     def test_getInput_withInput_withDefault(self, return_value):
         self.assertEqual(getInputSanitized(
-            0, 0, 0, "zero", "zero", "Testing"), '2', "Test Failed")
+            None, None, None, None, None, "Testing"), '2', "Test Failed")
 
     @patch('AstroCal.view.console_output.getInput', return_value='2')
     def test_getInput_withRange_inRange(self, return_value):
         self.assertEqual(getInputSanitized(
-            0, 0, int, 0, 20), 2, "Test Failed")
+            None, None, int, 0, 20), 2, "Test Failed")
