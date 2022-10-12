@@ -39,7 +39,7 @@ def main_menu():
 # sun options
 def sun_menu():
     clear()
-    print('✧ ･ﾟ * ✧  ASTRO CALENDAR  ✧ ･ﾟ * ✧ ･ﾟ \n')
+    print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Sun Events')
     print('1. View Today')
     print('2. Solar Eclipse')
@@ -108,7 +108,7 @@ def sun_menu():
 # moon options
 def moon_menu():
     clear()
-    print('✧ ･ﾟ * ✧  ASTRO CALENDAR  ✧ ･ﾟ * ✧ ･ﾟ \n')
+    print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Moon Events')
     print('1. View Today')
     print('2. Lunar Eclipse')
