@@ -84,7 +84,8 @@ def sun_menu(option=None):
         print('Sun will Set : ' + format_24hour_time_output(sun_set_time) +
               " Days: " + str(sun_set_day))"""
     if option == 1:
-        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc()
+        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc(
+            DATE.year, DATE.month, DATE.day)
         print("Solar Eclipse:")
         print("\tStart:\t\t" + str(sol_eclipse_start))
         print("\tTotality:\t" + str(sol_eclipse_max))
