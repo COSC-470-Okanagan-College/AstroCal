@@ -5,7 +5,7 @@ import sqlite3
 from sqlite3 import Error
 from datetime import datetime
 from array import *
-from constants.globals import LOCATION
+from AstroCal.constants.globals import LOCATION
 
 # Uncomment the function call at the bottom to use the getLocation tests
 
@@ -15,8 +15,10 @@ from constants.globals import LOCATION
 # event: RISE, SET
 # year, month, day of when the event will happen, can be left out of parameters to get current day
 # Returns time_unformatted and the day the event happens on
-def celestial_rise_or_set(celestial, event, year=0, month=0, day=0):
-    if year == 0 & month == 0 & day == 0:
+
+
+def celestial_rise_or_set(celestial, event, year=None, month=None, day=None):
+    if ((year == None)) & ((month == None)) & ((day == None)):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -59,13 +61,13 @@ def getRiseSet(year, month, day, celestial, status):
     return utcTime
 
 
-def getDateOfNextFullMoon_UTC(year=0, month=0, day=0):
+def getDateOfNextFullMoon_UTC(year=None, month=None, day=None):
     """Return the date of the next full moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a fullmoon illumination level (99%)
     Checks for brightest hour and minute as well to correct for UTC time conversion."""
 
-    if year == 0 & month == 0 & day == 0:
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -148,8 +150,8 @@ def getDaysTillFullMoon(timezone, year=0, month=0, day=0):
 
 # Gets string of data relating to time of solar eclipse
 # Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
-def getWhenSolEclipseLoc(year=0, month=0, day=0):
-    if year == 0 & month == 0 & day == 0:
+def getWhenSolEclipseLoc(year=None, month=None, day=None):
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -176,8 +178,8 @@ def getWhenSolEclipseLoc(year=0, month=0, day=0):
 
 # Gets string of data relating to time of Lunar eclipse
 # Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
-def getWhenLunEclipseLoc(year=0, month=0, day=0):
-    if year == 0 & month == 0 & day == 0:
+def getWhenLunEclipseLoc(year=None, month=None, day=None):
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -225,7 +227,7 @@ def getMoonStatus(year, month, day):
     if round(moon_percent) < 49:
         moon_status = " Crescent"
     elif round(moon_percent) > 51:
-        moon_status = " Cibbous"
+        moon_status = " Gibbous"
 
     if moon_percent < next_day_percent:
         result = "Waxing" + moon_status
@@ -287,12 +289,12 @@ def getVariableDayLength(amountOfDays, year=0, month=0, day=0):
     return amountOfDayLight
 
 
-def getDateOfNextNewMoon(year=0, month=0, day=0):
+def getDateOfNextNewMoon(year=None, month=None, day=None):
     """Return the date of the next new moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a new moon illumination level (~0%)
     Checks for dimmest hour and minute as well to correct for UTC time conversion."""
-    if year == 0 & month == 0 & day == 0:
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
