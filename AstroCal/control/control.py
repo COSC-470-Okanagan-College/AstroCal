@@ -120,7 +120,7 @@ def getDateOfNextFullMoon_UTC(year=None, month=None, day=None):
 
     tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
     utc_time = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
-    return (utc_time[0], utc_time[1], utc_time[2])
+    return (utc_time[0], utc_time[1], utc_time[2], utc_time[3], utc_time[4], utc_time[5])
 
 
 def getDaysTillFullMoon(year, month, day, timezone):
