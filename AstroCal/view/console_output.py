@@ -118,6 +118,7 @@ def sun_menu(option=None):
                 str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n"))
 
     elif option == 4:
+        LAST_MENU_OPTION = None
         main_menu()
     else:
         print('ERROR: not an option')
@@ -184,6 +185,7 @@ def moon_menu(option=None):
         print("Next Full Moon On: " +
               str(dateFullMoon[0]) + "-" + str(dateFullMoon[1]) + "-" + str(dateFullMoon[2]))
     elif option == 6:
+        LAST_MENU_OPTION = None
         main_menu()
     else:
         print('ERROR: not an option')
