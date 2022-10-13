@@ -120,7 +120,7 @@ def getDateOfNextFullMoon_UTC(year=None, month=None, day=None):
 
     tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
     utc_time = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
-    return (utc_time[0], utc_time[1], utc_time[2])
+    return (utc_time[0], utc_time[1], utc_time[2], utc_time[3], utc_time[4], utc_time[5])
 
 
 def getDaysTillFullMoon(timezone, year=0, month=0, day=0):
@@ -214,34 +214,43 @@ def getMoonStatusHelper(year=0, month=0, day=0):
 
     jd = swe.julday(year, month, day)
     se_moon = 1
-    attr = swe.pheno_ut(jd, se_moon, 1)
+    attr = swe.pheno_ut(jd, se_moon, swe.FLG_SWIEPH)
     moon_percent = (attr[1] * 100)
     return moon_percent
 
 
 # uses getMoonStatusHelper to display current phases of the moon
-def getMoonStatus(year, month, day):
+def getMoonStatus(year=0, month=0, day=0):
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
     moon_percent = getMoonStatusHelper(year, month, day)
     next_day_percent = getMoonStatusHelper(year, month, day+1)
     moon_status = ""
-    if round(moon_percent) < 49:
+    moon_percent_rounded = round(moon_percent)
+    if moon_percent_rounded < 49:
         moon_status = " Crescent"
-    elif round(moon_percent) > 51:
+    elif moon_percent_rounded > 51:
         moon_status = " Gibbous"
 
     if moon_percent < next_day_percent:
         result = "Waxing" + moon_status
     elif moon_percent > next_day_percent:
-        result = "Wanning" + moon_status
-    elif round(moon_percent) == 100:
+        result = "Waning" + moon_status
+
+    if moon_percent_rounded == 100:
         result = "Full Moon"
-    elif round(moon_percent) == 49 or 50 or 51:
-        result = "Half Moon"
-    elif round(moon_percent) == 0:
+    elif moon_percent_rounded == 49 or moon_percent_rounded == 50 or moon_percent_rounded == 51:
+        if moon_percent < next_day_percent:
+            result = "First Quarter"
+        elif moon_percent > next_day_percent:
+            result = "Last Quarter"
+    elif moon_percent_rounded == 0:
         result = "New Moon"
 
-    moon_percent_rounded = round(moon_percent)
-    return result, "Illumination " + str(moon_percent_rounded) + "%"
+    return (result, moon_percent_rounded)
 
 
 def getVariableDayLength(amountOfDays, year=0, month=0, day=0):
