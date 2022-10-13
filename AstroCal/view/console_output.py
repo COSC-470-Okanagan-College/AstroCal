@@ -142,7 +142,6 @@ def moon_menu(option=None):
     print('3. Date of Next New Moon')
     print('4. Date of Next Full Moon \n')
     print('5. Back \n')
-    option = getInputSani
     if option == None:
         option = getInputSanitized('Enter selection: ', moon_menu, int)
         LAST_MENU_OPTION = option
