@@ -3,41 +3,49 @@
 # Imports
 from datetime import datetime, timedelta
 from gettext import find
-from control import control
+from pickle import TRUE
+from AstroCal.control import control
 import sys
+import os
 
 
 # Main Menu
 def main_menu():
+    clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
+    print('Main Menu')
     get_current_date_formatted()
     print('1. Sun Events')
     print('2. Moon Events')
-    print('3. View Month')
-    print('4. exit \n')
-    option = int(input('Enter selection: '))
+    print('3. View Month\n')
+    print('4. Exit \n')
+    option = getInputSanitized('Enter selection: ', None, int)
     if option == 1:
         sun_menu()
     elif option == 2:
         moon_menu()
     elif option == 3:
         getCurrentMonth()
+        input('Press enter to continue...')
+        main_menu()
     elif option == 4:
         print('Bye')
         sys.exit(0)
     else:
-        print('error not an option')
+        print('ERROR: not an option')
         main_menu()
 
 
 # sun options
 def sun_menu():
+    clear()
+    print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Sun Events')
     print('1. View Today')
     print('2. Solar Eclipse')
-    print('3. Day Lengths')
+    print('3. Day Lengths\n')
     print('4. Back \n')
-    option = int(input('Enter selection: '))
+    option = getInputSanitized('Enter selection: ', sun_menu, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
@@ -59,36 +67,39 @@ def sun_menu():
         print("\tEnd:\t\t" + str(sol_eclipse_end))
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 3:
-        amountOfDays = int(input('Enter amount of days: '))
-        year, month, day = get_current_year_month_day()
-        currentDay = datetime(year, month, day)
-        dayLengths = control.getVariableDayLength(
-            year, month, day, amountOfDays)
-        for i in range(0, amountOfDays):
-            currentDay = datetime.now()
-            currentDay += timedelta(days=i)
+        amountOfDays = getInputSanitized(
+            'Enter amount of days (up to 500): ', sun_menu, int, 0, 500)
+        if amountOfDays != False:
+            year, month, day = get_current_year_month_day()
+            currentDay = datetime(year, month, day)
+            dayLengths = control.getVariableDayLength(
+                year, month, day, amountOfDays)
+            for i in range(0, amountOfDays):
+                currentDay = datetime.now()
+                currentDay += timedelta(days=i)
 
-            sun_rise_time = control.celestial_rise_or_set(
-                'SUN', 'RISE', currentDay.year, currentDay.month, currentDay.day)[0]
-            sun_set_time = control.celestial_rise_or_set(
-                'SUN', 'SET', currentDay.year, currentDay.month, currentDay.day)[0]
+                sun_rise_time = control.celestial_rise_or_set(
+                    'SUN', 'RISE', currentDay.year, currentDay.month, currentDay.day)[0]
+                sun_set_time = control.celestial_rise_or_set(
+                    'SUN', 'SET', currentDay.year, currentDay.month, currentDay.day)[0]
 
-            print("".ljust(40, '='))
-            print("{}, {}, {}".format(currentDay.strftime("%B"),
-                  currentDay.day, currentDay.year))
-            print("".ljust(40, '='))
-            print("{:<10} | {:<10} | {:<12}".format(
-                'Day Begin', 'Day End', 'Length of Day'))
-            print("".ljust(40, '-'))
-            print("{:<10} | {:<10} | {:<12}".format(
-                format_24hour_time_output(sun_rise_time),
-                format_24hour_time_output(sun_set_time),
-                str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n"))
+                print("".ljust(40, '='))
+                print("{}, {}, {}".format(currentDay.strftime("%B"),
+                                          currentDay.day, currentDay.year))
+                print("".ljust(40, '='))
+                print("{:<10} | {:<10} | {:<12}".format(
+                    'Day Begin', 'Day End', 'Length of Day'))
+                print("".ljust(40, '-'))
+                print("{:<10} | {:<10} | {:<12}".format(
+                    format_24hour_time_output(sun_rise_time),
+                    format_24hour_time_output(sun_set_time),
+                    str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n"))
 
     elif option == 4:
         main_menu()
     else:
-        print('error not an option')
+        print('ERROR: not an option')
+        input('Press enter to continue...')
         sun_menu()
     input('Press enter to continue...')
     main_menu()
@@ -96,6 +107,8 @@ def sun_menu():
 
 # moon options
 def moon_menu():
+    clear()
+    print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Moon Events')
     print('1. View Today')
     print('2. Lunar Eclipse')
@@ -103,7 +116,7 @@ def moon_menu():
     print('4. Date of Next New Moon')
     print('5. Date of Next Full Moon \n')
     print('6. Back \n')
-    option = int(input('Enter selection: '))
+    option = getInputSanitized('Enter selection: ', moon_menu, int)
     if option == 1:
         # Displays current date
         print(get_current_date_formatted())
@@ -139,8 +152,9 @@ def moon_menu():
     elif option == 6:
         main_menu()
     else:
-        print('error not an option')
-        sun_menu()
+        print('ERROR: not an option')
+        input('Press enter to continue...')
+        moon_menu()
     input('Press enter to continue...')
     main_menu()
 
@@ -191,7 +205,6 @@ def getCurrentMonth():
             (same_day if day == moon_rise_day else "Moonrise " + next_day +
              " ") + (same_day if day == moon_set_day else "Moonset " + next_day),
         ))
-    main_menu()
 
 
 # Get current year, month, day
@@ -218,3 +231,69 @@ def format_24hour_time_output(time):
     else:
         minute_str = str(time.minute)
     return hour_str + ':' + minute_str
+
+
+# Sanitizes input by requesting fpr inputType
+# message = message to display to user when asking for input
+# menu = menu that will show up after input fails. main_menu by default
+# inputType = declared by developer: (int, float, str). str by default
+# min = minimum value expected by the users input
+# max = maximum value expected by the users input
+def getInputSanitized(message=None, menu=None, input_type=None, min=None, max=None, default_user_input=None):
+    get_input_success = True
+    if message == None:  # Default message to user'
+        message = "Please enter input: "
+    if menu == None:  # Default menu to re-display
+        menu = main_menu
+    # Get Input
+    user_input = getInput(message)
+    # Input is empty
+    if user_input == '' and default_user_input != None:
+        user_input = default_user_input
+    elif user_input == '':
+        print("You entered nothing.")
+        get_input_success = False
+    # Input is wrong type
+    if input_type != None and get_input_success != False:
+        get_input_success = checkInputType(user_input, input_type)
+        if get_input_success == True:
+            # converts input from str to input_type
+            user_input = input_type(user_input)
+    # Input is in range
+    if min != None and max != None and get_input_success != False and input_type != None:
+        get_input_success = restrictInputToRangeInclusive(
+            user_input, min, max)
+    # All tests pass
+    if get_input_success == True:
+        return user_input
+    else:
+        input('Press enter to continue...')
+        menu()
+
+
+# Raw input from user
+def getInput(message):
+    return input(message)
+
+
+# raises exception if input type is wrong
+def checkInputType(user_input, input_type):
+    try:
+        input_type(user_input)
+        return True
+    except:
+        print("ERROR: Incorrect input type. Please try again.")
+        return False
+
+
+# raises exception if input is not within range
+def restrictInputToRangeInclusive(user_input, min, max):
+    if user_input < min or user_input > max:
+        print("ERROR: Please type a number between (" +
+              str(min) + "-" + str(max) + ").")
+        return False
+    return True
+
+
+# Clears console when called
+def clear(): return os.system('cls')

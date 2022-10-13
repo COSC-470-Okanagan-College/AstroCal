@@ -1,4 +1,4 @@
-from view import *
-from view.home import *
+from AstroCal.view import *
+from AstroCal.view.home import *
 from kivy import *
-from view.console_output import *
+from AstroCal.view.console_output import *
