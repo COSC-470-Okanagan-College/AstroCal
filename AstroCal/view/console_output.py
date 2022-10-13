@@ -2,65 +2,90 @@
 
 # Imports
 from datetime import datetime, timedelta
+import calendar
 from gettext import find
 from pickle import TRUE
 from AstroCal.control import control
 import sys
+from AstroCal.constants.globals import DATE, LAST_MENU_OPTION
 import os
 
 
 # Main Menu
-def main_menu():
+def main_menu(option=None):
+    global DATE, LAST_MENU_OPTION
     clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
+    print("Date Selected: " + get_date_formatted(DATE))
     print('Main Menu')
-    get_current_date_formatted()
     print('1. Sun Events')
     print('2. Moon Events')
-    print('3. View Month\n')
-    print('4. Exit \n')
-    option = getInputSanitized('Enter selection: ', None, int)
+    print('3. View Month')
+    print('4. Change Date\n')
+    print('5. Exit \n')
+    if option == None:
+        option = getInputSanitized('Enter selection: ', None, int)
+        LAST_MENU_OPTION = option
+    else:
+        print('Enter selection: ' + str(option))
     if option == 1:
+        LAST_MENU_OPTION = None
         sun_menu()
     elif option == 2:
+        LAST_MENU_OPTION = None
         moon_menu()
     elif option == 3:
-        getCurrentMonth()
+        getMonth()
         input('Press enter to continue...')
         main_menu()
     elif option == 4:
+        DATE = getDateFromUser()
+        print("\nNew Date: " + get_date_formatted(DATE))
+        input('Press enter to continue...')
+        main_menu()
+    elif option == 5:
         print('Bye')
         sys.exit(0)
     else:
         print('ERROR: not an option')
+        LAST_MENU_OPTION = None
         main_menu()
+    LAST_MENU_OPTION = None
 
 
 # sun options
-def sun_menu():
+def sun_menu(option=None):
+    global LAST_MENU_OPTION
     clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Sun Events')
+
+    print("Date Selected: " + get_date_formatted(DATE))
     #print('1. View Today')
     print('1. Solar Eclipse')
     print('2. Day Lengths\n')
     print('3. Back \n')
-    option = getInputSanitized('Enter selection: ', sun_menu, int)
+    if option == None:
+        option = getInputSanitized('Enter selection: ', sun_menu, int)
+        LAST_MENU_OPTION = option
+    else:
+        print('Enter selection: ' + str(option))
     """if option == 1:
         # Displays current date
-        print(get_current_date_formatted())
+        print(get_date_formatted(DATE))
         # call function name for moon rise
         sun_rise_time, sun_rise_day = control.celestial_rise_or_set(
-            'SUN', 'RISE')
+            'SUN', 'RISE', DATE.year, DATE.month, DATE.day)
         print('Sun will Rise: ' + format_24hour_time_output(sun_rise_time) +
               " Days: " + str(sun_rise_day))
         # call function name for moon set
         sun_set_time, sun_set_day = control.celestial_rise_or_set(
-            'SUN', 'SET')
+            'SUN', 'SET', DATE.year, DATE.month, DATE.day)
         print('Sun will Set : ' + format_24hour_time_output(sun_set_time) +
               " Days: " + str(sun_set_day))"""
     if option == 1:
-        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc()
+        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc(
+            DATE.year, DATE.month, DATE.day)
         print("Solar Eclipse:")
         print("\tStart:\t\t" + str(sol_eclipse_start))
         print("\tTotality:\t" + str(sol_eclipse_max))
@@ -68,104 +93,116 @@ def sun_menu():
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 2:
         amountOfDays = getInputSanitized(
-            'Enter amount of days (up to 500): ', sun_menu, int, 0, 500)
-        if amountOfDays != False:
-            year, month, day = get_current_year_month_day()
-            currentDay = datetime(year, month, day)
-            dayLengths = control.getVariableDayLength(
-                year, month, day, amountOfDays)
-            for i in range(0, amountOfDays):
-                currentDay = datetime.now()
-                currentDay += timedelta(days=i)
+            'Enter amount of days (up to 500). Default is 1 (enter): ', sun_menu, int, 0, 500, 1)
+        currentDay = DATE
+        dayLengths = control.getVariableDayLength(
+            amountOfDays, DATE.year, DATE.month, DATE.day)
+        for i in range(0, amountOfDays):
+            currentDay = DATE
+            currentDay += timedelta(days=i)
 
-                sun_rise_time = control.celestial_rise_or_set(
-                    'SUN', 'RISE', currentDay.year, currentDay.month, currentDay.day)[0]
-                sun_set_time = control.celestial_rise_or_set(
-                    'SUN', 'SET', currentDay.year, currentDay.month, currentDay.day)[0]
+            sun_rise_time = control.celestial_rise_or_set(
+                'SUN', 'RISE', currentDay.year, currentDay.month, currentDay.day)[0]
+            sun_set_time = control.celestial_rise_or_set(
+                'SUN', 'SET', currentDay.year, currentDay.month, currentDay.day)[0]
 
-                print("".ljust(40, '='))
-                print("{}, {}, {}".format(currentDay.strftime("%B"),
-                                          currentDay.day, currentDay.year))
-                print("".ljust(40, '='))
-                print("{:<10} | {:<10} | {:<12}".format(
-                    'Day Begin', 'Day End', 'Length of Day'))
-                print("".ljust(40, '-'))
-                print("{:<10} | {:<10} | {:<12}".format(
-                    format_24hour_time_output(sun_rise_time),
-                    format_24hour_time_output(sun_set_time),
-                    str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n"))
-
+            print("".ljust(40, '='))
+            print("{}, {}, {}".format(currentDay.strftime("%B"),
+                  currentDay.day, currentDay.year))
+            print("".ljust(40, '='))
+            print("{:<10} | {:<10} | {:<12}".format(
+                'Day Begin', 'Day End', 'Length of Day'))
+            print("".ljust(40, '-'))
+            print("{:<10} | {:<10} | {:<12}".format(
+                format_24hour_time_output(sun_rise_time),
+                format_24hour_time_output(sun_set_time),
+                str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n"))
     elif option == 3:
+        LAST_MENU_OPTION = None
         main_menu()
     else:
         print('ERROR: not an option')
         input('Press enter to continue...')
+        LAST_MENU_OPTION = None
         sun_menu()
     input('Press enter to continue...')
+    LAST_MENU_OPTION = None
     main_menu()
 
 
 # moon options
-def moon_menu():
+def moon_menu(option=None):
+    global LAST_MENU_OPTION
     clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Moon Events')
+    print("Date Selected: " + get_date_formatted(DATE))
     #print('1. View Today')
     print('1. Lunar Eclipse')
     print('2. View Moon Status')
     print('3. Date of Next New Moon')
     print('4. Date of Next Full Moon \n')
     print('5. Back \n')
-    option = getInputSanitized('Enter selection: ', moon_menu, int)
+    if option == None:
+        option = getInputSanitized('Enter selection: ', moon_menu, int)
+        LAST_MENU_OPTION = option
+    else:
+        print('Enter selection: ' + str(option))
     """if option == 1:
         # Displays current date
-        print(get_current_date_formatted())
+        print(get_date_formatted(DATE))
         # call function name for moon rise
         moon_rise_time, moon_rise_day = control.celestial_rise_or_set(
-            'MOON', 'RISE')
+            'MOON', 'RISE', DATE.year, DATE.month, DATE.day)
         print('Moon will Rise: ' + format_24hour_time_output(moon_rise_time) +
               " Days: " + str(moon_rise_day))
         # call function name for moon set
         moon_set_time, moon_set_day = control.celestial_rise_or_set(
-            'MOON', 'SET')
+            'MOON', 'SET', DATE.year, DATE.month, DATE.day)
         print('Moon will Set : ' + format_24hour_time_output(moon_set_time) +
               " Days: " + str(moon_set_day))"""
     if option == 1:
-        lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipseLoc()
+        lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipseLoc(
+            DATE.year, DATE.month, DATE.day)
         print("Lunar Eclipse:")
         print("\tStart:\t\t" + str(lun_eclipse_start))
         print("\tTotality:\t" + str(lun_eclipse_max))
         print("\tEnd:\t\t" + str(lun_eclipse_end))
         print("\tDuration:\t" + str(lun_eclipse_duration))
     elif option == 2:
-        moon_status_result = control.getMoonStatus()
+        moon_status_result = control.getMoonStatus(
+            DATE.year, DATE.month, DATE.day)
         print(moon_status_result[0])
         print("Illumination " + str(moon_status_result[1]) + "%")
     elif option == 3:
-        dateNewMoon = control.getDateOfNextNewMoon()
+        dateNewMoon = control.getDateOfNextNewMoon(
+            DATE.year, DATE.month, DATE.day)
         print("Next New Moon On: " +
               str(dateNewMoon[0]) + "-" + str(dateNewMoon[1]) + "-" + str(dateNewMoon[2]))
     elif option == 4:
-        dateFullMoon = control.getDateOfNextFullMoon_UTC()
+        dateFullMoon = control.getDateOfNextFullMoon_UTC(
+            DATE.year, DATE.month, DATE.day)
         print("Next Full Moon On: " +
               str(dateFullMoon[0]) + "-" + str(dateFullMoon[1]) + "-" + str(dateFullMoon[2]))
     elif option == 5:
+        LAST_MENU_OPTION = None
         main_menu()
     else:
         print('ERROR: not an option')
         input('Press enter to continue...')
+        LAST_MENU_OPTION = None
         moon_menu()
     input('Press enter to continue...')
+    LAST_MENU_OPTION = None
     main_menu()
 
 
 # Displays the overall output for each day of the current month
-def getCurrentMonth():
+def getMonth():
     # Get Current Month & Year
-    now = datetime.now()
-    month_str = now.strftime("%B")
-    month = now.month
-    year = now.year
+    month_str = DATE.strftime("%B")
+    month = DATE.month
+    year = DATE.year
     same_day = ""
     next_day = "Next Day"
 
@@ -214,9 +251,10 @@ def get_current_year_month_day():
 
 
 # get current date
-def get_current_date_formatted():
-    currentdate = datetime.now()
-    today = currentdate.strftime("%B-%d-%Y  %H:%M \n")
+def get_date_formatted(date=0):
+    if date == 0:
+        date = datetime.now()
+    today = date.strftime("%B-%d-%Y  %H:%M \n")
     return today
 
 
@@ -233,6 +271,22 @@ def format_24hour_time_output(time):
     return hour_str + ':' + minute_str
 
 
+# Gets date from the user
+def getDateFromUser():
+    now = datetime.now()
+    year = getInputSanitized(
+        'Enter a year between 1000 and 3000. Default is current year (enter): ', None, int, 1000, 3000, now.year)
+    month = getInputSanitized(
+        'Enter a month between 1 and 12. Default is current month (enter): ', None, int, 1, 12, now.month)
+    days_in_month = calendar.monthrange(year, month)[1]
+    day = getInputSanitized('Enter a day between 1 and ' + str(days_in_month) +
+                            '. Default is current day (enter): ', None, int, 1, days_in_month, now.day)
+    # Needs sanitizing for 31 days or 30 days
+    # Needs sanitizing for input types
+    # Year needs to be within a range
+    return datetime(year, month, day)
+
+
 # Sanitizes input by requesting fpr inputType
 # message = message to display to user when asking for input
 # menu = menu that will show up after input fails. main_menu by default
@@ -240,6 +294,7 @@ def format_24hour_time_output(time):
 # min = minimum value expected by the users input
 # max = maximum value expected by the users input
 def getInputSanitized(message=None, menu=None, input_type=None, min=None, max=None, default_user_input=None):
+    global LAST_MENU_OPTION
     get_input_success = True
     if message == None:  # Default message to user'
         message = "Please enter input: "
@@ -268,7 +323,7 @@ def getInputSanitized(message=None, menu=None, input_type=None, min=None, max=No
         return user_input
     else:
         input('Press enter to continue...')
-        menu()
+        menu(LAST_MENU_OPTION)
 
 
 # Raw input from user

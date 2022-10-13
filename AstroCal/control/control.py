@@ -5,10 +5,10 @@ import sqlite3
 from sqlite3 import Error
 from datetime import datetime
 from array import *
+from AstroCal.constants.globals import LOCATION
 
-# Global tuple to save the currently called location. Interacts with getLocation and getLocationTest
 # Uncomment the function call at the bottom to use the getLocation tests
-LOCATION = ()
+
 
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
 # celestial: SUN, MOON
@@ -123,8 +123,14 @@ def getDateOfNextFullMoon_UTC(year=None, month=None, day=None):
     return (utc_time[0], utc_time[1], utc_time[2], utc_time[3], utc_time[4], utc_time[5])
 
 
-def getDaysTillFullMoon(year, month, day, timezone):
+def getDaysTillFullMoon(timezone, year=0, month=0, day=0):
     """Gets days till next full moon based on entered date and timezone offset """
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+
     year_utc, month_utc, day_utc, _, _, _ = swe.utc_time_zone(
         year, month, day, 0, 0, 0, timezone)
     # Returns the UTC time and date of the next full moon as a tuple
@@ -198,8 +204,14 @@ def getWhenLunEclipseLoc(year=None, month=None, day=None):
     return (time_formatted_start, time_formatted_max, time_formatted_end, timeEclipseDuration)
 
 
-# calculates the moons current illumination
-def getMoonStatusHelper(year, month, day):
+# calculates the moons illumination
+def getMoonStatusHelper(year=0, month=0, day=0):
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+
     jd = swe.julday(year, month, day)
     se_moon = 1
     attr = swe.pheno_ut(jd, se_moon, swe.FLG_SWIEPH)
@@ -241,9 +253,15 @@ def getMoonStatus(year=0, month=0, day=0):
     return (result, moon_percent_rounded)
 
 
-def getVariableDayLength(year, month, day, amountOfDays):
+def getVariableDayLength(amountOfDays, year=0, month=0, day=0):
     """Return 2d array with amount of hours and minutes per day from current day to specified amount of days
     """
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+
     amountOfDayLight = []
 
     for i in range(0, amountOfDays):
