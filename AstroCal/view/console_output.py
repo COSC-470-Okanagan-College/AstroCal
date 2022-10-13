@@ -59,17 +59,18 @@ def sun_menu(option=None):
     clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Sun Events')
+
     print("Date Selected: " + get_date_formatted(DATE))
-    print('1. View Today')
-    print('2. Solar Eclipse')
-    print('3. Day Lengths\n')
-    print('4. Back \n')
+    #print('1. View Today')
+    print('1. Solar Eclipse')
+    print('2. Day Lengths\n')
+    print('3. Back \n')
     if option == None:
         option = getInputSanitized('Enter selection: ', sun_menu, int)
         LAST_MENU_OPTION = option
     else:
         print('Enter selection: ' + str(option))
-    if option == 1:
+    """if option == 1:
         # Displays current date
         print(get_date_formatted(DATE))
         # call function name for moon rise
@@ -81,16 +82,15 @@ def sun_menu(option=None):
         sun_set_time, sun_set_day = control.celestial_rise_or_set(
             'SUN', 'SET', DATE.year, DATE.month, DATE.day)
         print('Sun will Set : ' + format_24hour_time_output(sun_set_time) +
-              " Days: " + str(sun_set_day))
-    elif option == 2:
-        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc(
-            DATE.year, DATE.month, DATE.day)
+              " Days: " + str(sun_set_day))"""
+    if option == 1:
+        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc()
         print("Solar Eclipse:")
         print("\tStart:\t\t" + str(sol_eclipse_start))
         print("\tTotality:\t" + str(sol_eclipse_max))
         print("\tEnd:\t\t" + str(sol_eclipse_end))
         print("\tDuration:\t" + str(sol_eclipse_duration))
-    elif option == 3:
+    elif option == 2:
         amountOfDays = getInputSanitized(
             'Enter amount of days (up to 500). Default is 1 (enter): ', sun_menu, int, 0, 500, 1)
         currentDay = DATE
@@ -116,8 +116,7 @@ def sun_menu(option=None):
                 format_24hour_time_output(sun_rise_time),
                 format_24hour_time_output(sun_set_time),
                 str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n"))
-
-    elif option == 4:
+    elif option == 3:
         LAST_MENU_OPTION = None
         main_menu()
     else:
@@ -137,18 +136,19 @@ def moon_menu(option=None):
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Moon Events')
     print("Date Selected: " + get_date_formatted(DATE))
-    print('1. View Today')
-    print('2. Lunar Eclipse')
-    print('3. View Moon Status')
-    print('4. Date of Next New Moon')
-    print('5. Date of Next Full Moon \n')
-    print('6. Back \n')
+    #print('1. View Today')
+    print('1. Lunar Eclipse')
+    print('2. View Moon Status')
+    print('3. Date of Next New Moon')
+    print('4. Date of Next Full Moon \n')
+    print('5. Back \n')
+    option = getInputSani
     if option == None:
         option = getInputSanitized('Enter selection: ', moon_menu, int)
         LAST_MENU_OPTION = option
     else:
         print('Enter selection: ' + str(option))
-    if option == 1:
+    """if option == 1:
         # Displays current date
         print(get_date_formatted(DATE))
         # call function name for moon rise
@@ -160,8 +160,8 @@ def moon_menu(option=None):
         moon_set_time, moon_set_day = control.celestial_rise_or_set(
             'MOON', 'SET', DATE.year, DATE.month, DATE.day)
         print('Moon will Set : ' + format_24hour_time_output(moon_set_time) +
-              " Days: " + str(moon_set_day))
-    elif option == 2:
+              " Days: " + str(moon_set_day))"""
+    if option == 1:
         lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipseLoc(
             DATE.year, DATE.month, DATE.day)
         print("Lunar Eclipse:")
@@ -169,22 +169,22 @@ def moon_menu(option=None):
         print("\tTotality:\t" + str(lun_eclipse_max))
         print("\tEnd:\t\t" + str(lun_eclipse_end))
         print("\tDuration:\t" + str(lun_eclipse_duration))
-    elif option == 3:
+    elif option == 2:
         moon_status_result = control.getMoonStatus(
             DATE.year, DATE.month, DATE.day)
         print(moon_status_result[0])
         print(moon_status_result[1])
-    elif option == 4:
+    elif option == 3:
         dateNewMoon = control.getDateOfNextNewMoon(
             DATE.year, DATE.month, DATE.day)
         print("Next New Moon On: " +
               str(dateNewMoon[0]) + "-" + str(dateNewMoon[1]) + "-" + str(dateNewMoon[2]))
-    elif option == 5:
+    elif option == 4:
         dateFullMoon = control.getDateOfNextFullMoon_UTC(
             DATE.year, DATE.month, DATE.day)
         print("Next Full Moon On: " +
               str(dateFullMoon[0]) + "-" + str(dateFullMoon[1]) + "-" + str(dateFullMoon[2]))
-    elif option == 6:
+    elif option == 5:
         LAST_MENU_OPTION = None
         main_menu()
     else:
