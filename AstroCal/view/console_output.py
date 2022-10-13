@@ -41,12 +41,12 @@ def sun_menu():
     clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Sun Events')
-    print('1. View Today')
-    print('2. Solar Eclipse')
-    print('3. Day Lengths\n')
-    print('4. Back \n')
+    #print('1. View Today')
+    print('1. Solar Eclipse')
+    print('2. Day Lengths\n')
+    print('3. Back \n')
     option = getInputSanitized('Enter selection: ', sun_menu, int)
-    if option == 1:
+    """if option == 1:
         # Displays current date
         print(get_current_date_formatted())
         # call function name for moon rise
@@ -58,15 +58,15 @@ def sun_menu():
         sun_set_time, sun_set_day = control.celestial_rise_or_set(
             'SUN', 'SET')
         print('Sun will Set : ' + format_24hour_time_output(sun_set_time) +
-              " Days: " + str(sun_set_day))
-    elif option == 2:
+              " Days: " + str(sun_set_day))"""
+    if option == 1:
         sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc()
         print("Solar Eclipse:")
         print("\tStart:\t\t" + str(sol_eclipse_start))
         print("\tTotality:\t" + str(sol_eclipse_max))
         print("\tEnd:\t\t" + str(sol_eclipse_end))
         print("\tDuration:\t" + str(sol_eclipse_duration))
-    elif option == 3:
+    elif option == 2:
         amountOfDays = getInputSanitized(
             'Enter amount of days (up to 500): ', sun_menu, int, 0, 500)
         if amountOfDays != False:
@@ -95,7 +95,7 @@ def sun_menu():
                     format_24hour_time_output(sun_set_time),
                     str(dayLengths[i][0]) + ":" + str(dayLengths[i][1]) + "hrs" + "\n"))
 
-    elif option == 4:
+    elif option == 3:
         main_menu()
     else:
         print('ERROR: not an option')
@@ -110,14 +110,14 @@ def moon_menu():
     clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Moon Events')
-    print('1. View Today')
-    print('2. Lunar Eclipse')
-    print('3. View Moon Status')
-    print('4. Date of Next New Moon')
-    print('5. Date of Next Full Moon \n')
-    print('6. Back \n')
+    #print('1. View Today')
+    print('1. Lunar Eclipse')
+    print('2. View Moon Status')
+    print('3. Date of Next New Moon')
+    print('4. Date of Next Full Moon \n')
+    print('5. Back \n')
     option = getInputSanitized('Enter selection: ', moon_menu, int)
-    if option == 1:
+    """if option == 1:
         # Displays current date
         print(get_current_date_formatted())
         # call function name for moon rise
@@ -129,27 +129,27 @@ def moon_menu():
         moon_set_time, moon_set_day = control.celestial_rise_or_set(
             'MOON', 'SET')
         print('Moon will Set : ' + format_24hour_time_output(moon_set_time) +
-              " Days: " + str(moon_set_day))
-    elif option == 2:
+              " Days: " + str(moon_set_day))"""
+    if option == 1:
         lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipseLoc()
         print("Lunar Eclipse:")
         print("\tStart:\t\t" + str(lun_eclipse_start))
         print("\tTotality:\t" + str(lun_eclipse_max))
         print("\tEnd:\t\t" + str(lun_eclipse_end))
         print("\tDuration:\t" + str(lun_eclipse_duration))
-    elif option == 3:
+    elif option == 2:
         moon_status_result = control.getMoonStatus()
         print(moon_status_result[0])
         print("Illumination " + str(moon_status_result[1]) + "%")
-    elif option == 4:
+    elif option == 3:
         dateNewMoon = control.getDateOfNextNewMoon()
         print("Next New Moon On: " +
               str(dateNewMoon[0]) + "-" + str(dateNewMoon[1]) + "-" + str(dateNewMoon[2]))
-    elif option == 5:
+    elif option == 4:
         dateFullMoon = control.getDateOfNextFullMoon_UTC()
         print("Next Full Moon On: " +
               str(dateFullMoon[0]) + "-" + str(dateFullMoon[1]) + "-" + str(dateFullMoon[2]))
-    elif option == 6:
+    elif option == 5:
         main_menu()
     else:
         print('ERROR: not an option')
