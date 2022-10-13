@@ -7,13 +7,13 @@ from gettext import find
 from pickle import TRUE
 from AstroCal.control import control
 import sys
-from AstroCal.constants.globals import DATE
+from AstroCal.constants.globals import DATE, LAST_MENU_OPTION
 import os
 
 
 # Main Menu
-def main_menu():
-    global DATE
+def main_menu(option=None):
+    global DATE, LAST_MENU_OPTION
     clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print("Date Selected: " + get_date_formatted(DATE))
@@ -23,10 +23,16 @@ def main_menu():
     print('3. View Month')
     print('4. Change Date\n')
     print('5. Exit \n')
-    option = getInputSanitized('Enter selection: ', None, int)
+    if option == None:
+        option = getInputSanitized('Enter selection: ', None, int)
+        LAST_MENU_OPTION = option
+    else:
+        print('Enter selection: ' + str(option))
     if option == 1:
+        LAST_MENU_OPTION = None
         sun_menu()
     elif option == 2:
+        LAST_MENU_OPTION = None
         moon_menu()
     elif option == 3:
         getMonth()
@@ -42,11 +48,14 @@ def main_menu():
         sys.exit(0)
     else:
         print('ERROR: not an option')
+        LAST_MENU_OPTION = None
         main_menu()
+    LAST_MENU_OPTION = None
 
 
 # sun options
-def sun_menu():
+def sun_menu(option=None):
+    global LAST_MENU_OPTION
     clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Sun Events')
@@ -55,7 +64,11 @@ def sun_menu():
     print('2. Solar Eclipse')
     print('3. Day Lengths\n')
     print('4. Back \n')
-    option = getInputSanitized('Enter selection: ', sun_menu, int)
+    if option == None:
+        option = getInputSanitized('Enter selection: ', sun_menu, int)
+        LAST_MENU_OPTION = option
+    else:
+        print('Enter selection: ' + str(option))
     if option == 1:
         # Displays current date
         print(get_date_formatted(DATE))
@@ -79,7 +92,7 @@ def sun_menu():
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 3:
         amountOfDays = getInputSanitized(
-            'Enter amount of days (up to 500): ', sun_menu, int, 0, 500)
+            'Enter amount of days (up to 500). Default is 1 (enter): ', sun_menu, int, 0, 500, 1)
         currentDay = DATE
         dayLengths = control.getVariableDayLength(
             amountOfDays, DATE.year, DATE.month, DATE.day)
@@ -109,13 +122,16 @@ def sun_menu():
     else:
         print('ERROR: not an option')
         input('Press enter to continue...')
+        LAST_MENU_OPTION = None
         sun_menu()
     input('Press enter to continue...')
+    LAST_MENU_OPTION = None
     main_menu()
 
 
 # moon options
-def moon_menu():
+def moon_menu(option=None):
+    global LAST_MENU_OPTION
     clear()
     print('✧ ･ﾟ * ✧  ASTRO CALANDER  ✧ ･ﾟ * ✧ ･ﾟ \n')
     print('Moon Events')
@@ -126,7 +142,11 @@ def moon_menu():
     print('4. Date of Next New Moon')
     print('5. Date of Next Full Moon \n')
     print('6. Back \n')
-    option = getInputSanitized('Enter selection: ', moon_menu, int)
+    if option == None:
+        option = getInputSanitized('Enter selection: ', moon_menu, int)
+        LAST_MENU_OPTION = option
+    else:
+        print('Enter selection: ' + str(option))
     if option == 1:
         # Displays current date
         print(get_date_formatted(DATE))
@@ -168,8 +188,10 @@ def moon_menu():
     else:
         print('ERROR: not an option')
         input('Press enter to continue...')
+        LAST_MENU_OPTION = None
         moon_menu()
     input('Press enter to continue...')
+    LAST_MENU_OPTION = None
     main_menu()
 
 
@@ -268,6 +290,7 @@ def getDateFromUser():
 # min = minimum value expected by the users input
 # max = maximum value expected by the users input
 def getInputSanitized(message=None, menu=None, input_type=None, min=None, max=None, default_user_input=None):
+    global LAST_MENU_OPTION
     get_input_success = True
     if message == None:  # Default message to user'
         message = "Please enter input: "
@@ -296,7 +319,7 @@ def getInputSanitized(message=None, menu=None, input_type=None, min=None, max=No
         return user_input
     else:
         input('Press enter to continue...')
-        menu()
+        menu(LAST_MENU_OPTION)
 
 
 # Raw input from user

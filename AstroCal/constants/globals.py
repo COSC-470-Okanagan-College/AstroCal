@@ -3,3 +3,4 @@ from datetime import datetime
 
 LOCATION = ()
 DATE = datetime.now()
+LAST_MENU_OPTION = None
