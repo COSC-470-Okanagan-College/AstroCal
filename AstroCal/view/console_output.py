@@ -229,7 +229,8 @@ def getMonth():
         moon_set_time, moon_set_day = control.celestial_rise_or_set(
             'MOON', 'SET', year, month, day)
         moon_status, moon_illumin = control.getMoonStatus(year, month, day)
-        date = "{} {}, {}".format(month_str, day, year)
+        day_name = datetime(year, month, day).strftime("%a")
+        date = "{} {} {}, {}".format(day_name, month_str, day, year)
 
         print("{:<20} | {:<8} | {:<8} | {:<8} | {:<8} | {:<20} | {:<8}".format(
             date,
