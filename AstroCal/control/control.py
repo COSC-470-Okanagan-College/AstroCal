@@ -17,9 +17,9 @@ from AstroCal.constants.globals import LOCATION
 # Returns time_unformatted and the day the event happens on
 
 
-def celestial_rise_or_set(celestial, event, year=None, month=None, day=None):
+def celestial_rise_or_set(celestial, event, year=None, month=None, day=None, hour=0, minute=0):
     if ((year == None)) & ((month == None)) & ((day == None)):
-        now = datetime.now()
+        now = datetime.now(pytz.timezone('UTC'))
         year = now.year
         month = now.month
         day = now.day
@@ -38,7 +38,7 @@ def utc_hack(date_tup):
 
 
 # gets the raw DateTime object of rise or set of a celestial object
-def getRiseSet(year, month, day, celestial, status):
+def getRiseSet(year, month, day, celestial, status, hour=7):
     constCel = swe.SUN
     if (celestial == 'MOON'):
         constCel = swe.MOON
@@ -47,7 +47,7 @@ def getRiseSet(year, month, day, celestial, status):
     if (status == 'SET'):
         constStatus = swe.CALC_SET
 
-    tjd = swe.julday(year, month, day, 7, swe.GREG_CAL)  # julian day
+    tjd = swe.julday(year, month, day, hour, swe.GREG_CAL)  # julian day
 
     res, tret = swe.rise_trans(tjd, constCel, constStatus,
                                (-119.4960, 49.8880, 342.0), 0, 0, swe.FLG_SWIEPH)  # Coordinates are hardcoded for now
@@ -298,7 +298,7 @@ def getVariableDayLength(amountOfDays, year=0, month=0, day=0):
     return amountOfDayLight
 
 
-def getDateOfNextNewMoon(year=None, month=None, day=None):
+def getDateOfNextNewMoon(year: int = None, month: int = None, day: int = None):
     """Return the date of the next new moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a new moon illumination level (~0%)
@@ -333,31 +333,35 @@ def getDateOfNextNewMoon(year=None, month=None, day=None):
     min = swe.pheno_ut(tjd, swe.MOON)[1]
     temp = min
     hour = 0.0
+    low_hour = 0.0
     # Find the dimmest hour in that day
-    while (temp < min and hour < 23):
+    while (hour < 23):
         hour += 1.0
         tjd = swe.julday(year, month, day+daysCount, hour, swe.GREG_CAL)
         temp = swe.pheno_ut(tjd, swe.MOON)[1]
         if (temp < min):
             min = temp
+            low_hour = hour
 
     # Get the minute with the dimmest illumination
-    tjd = swe.julday(year, month, day+daysCount, hour, swe.GREG_CAL)
+    tjd = swe.julday(year, month, day+daysCount, low_hour, swe.GREG_CAL)
     min = swe.pheno_ut(tjd, swe.MOON)[1]
     temp = min
     minute = 0.0
+    low_minute = 0.0
     # Find the dimmest minute
-    while (temp < min):
+    while (minute < 1.0):
         minute += 0.017
-        tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
+        tjd = swe.julday(year, month, day+daysCount, low_hour+minute, swe.GREG_CAL)
         temp = swe.pheno_ut(tjd, swe.MOON)[1]
         if (temp < min):
             min = temp
+            low_minute = minute
 
-    tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
+    tjd = swe.julday(year, month, day+daysCount, low_hour+low_minute, swe.GREG_CAL)
     utc = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
-    newMoon_year, newMoon_month, newMoon_day = utc[0], utc[1], utc[2]
-    return (newMoon_year, newMoon_month, newMoon_day)
+    newMoon_year, newMoon_month, newMoon_day, newMoon_hour, newMoon_minute, newMoon_second = utc[0], utc[1], utc[2], utc[3], utc[4], utc[5]
+    return (newMoon_year, newMoon_month, newMoon_day, newMoon_hour, newMoon_minute, newMoon_second)
 
 
 def getLocation(city, country):
