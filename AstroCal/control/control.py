@@ -5,19 +5,21 @@ import sqlite3
 from sqlite3 import Error
 from datetime import datetime
 from array import *
+from AstroCal.constants.globals import LOCATION
 
-#Global tuple to save the currently called location. Interacts with getLocation and getLocationTest
-#Uncomment the function call at the bottom to use the getLocation tests
-LOCATION = ()
+# Uncomment the function call at the bottom to use the getLocation tests
+
 
 # returns either rise or set of a specific celestial object in a formatted 24 hour string
 # celestial: SUN, MOON
 # event: RISE, SET
 # year, month, day of when the event will happen, can be left out of parameters to get current day
 # Returns time_unformatted and the day the event happens on
-def celestial_rise_or_set(celestial, event, year=0, month=0, day=0):
-    if year == 0 & month == 0 & day == 0:
-        now = datetime.now()
+
+
+def celestial_rise_or_set(celestial, event, year=None, month=None, day=None, hour=0, minute=0):
+    if ((year == None)) & ((month == None)) & ((day == None)):
+        now = datetime.now(pytz.timezone('UTC'))
         year = now.year
         month = now.month
         day = now.day
@@ -36,7 +38,7 @@ def utc_hack(date_tup):
 
 
 # gets the raw DateTime object of rise or set of a celestial object
-def getRiseSet(year, month, day, celestial, status):
+def getRiseSet(year, month, day, celestial, status, hour=7):
     constCel = swe.SUN
     if (celestial == 'MOON'):
         constCel = swe.MOON
@@ -45,7 +47,7 @@ def getRiseSet(year, month, day, celestial, status):
     if (status == 'SET'):
         constStatus = swe.CALC_SET
 
-    tjd = swe.julday(year, month, day, 7, swe.GREG_CAL)  # julian day
+    tjd = swe.julday(year, month, day, hour, swe.GREG_CAL)  # julian day
 
     res, tret = swe.rise_trans(tjd, constCel, constStatus,
                                (-119.4960, 49.8880, 342.0), 0, 0, swe.FLG_SWIEPH)  # Coordinates are hardcoded for now
@@ -59,13 +61,13 @@ def getRiseSet(year, month, day, celestial, status):
     return utcTime
 
 
-def getDateOfNextFullMoon_UTC(year=0, month=0, day=0):
+def getDateOfNextFullMoon_UTC(year=None, month=None, day=None):
     """Return the date of the next full moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a fullmoon illumination level (99%)
     Checks for brightest hour and minute as well to correct for UTC time conversion."""
 
-    if year == 0 & month == 0 & day == 0:
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -118,11 +120,17 @@ def getDateOfNextFullMoon_UTC(year=0, month=0, day=0):
 
     tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
     utc_time = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
-    return (utc_time[0], utc_time[1], utc_time[2])
+    return (utc_time[0], utc_time[1], utc_time[2], utc_time[3], utc_time[4], utc_time[5])
 
 
-def getDaysTillFullMoon(year, month, day, timezone):
+def getDaysTillFullMoon(timezone, year=0, month=0, day=0):
     """Gets days till next full moon based on entered date and timezone offset """
+    if year == 0 & month == 0 & day == 0:
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+
     year_utc, month_utc, day_utc, _, _, _ = swe.utc_time_zone(
         year, month, day, 0, 0, 0, timezone)
     # Returns the UTC time and date of the next full moon as a tuple
@@ -142,19 +150,17 @@ def getDaysTillFullMoon(year, month, day, timezone):
 
 # Gets string of data relating to time of solar eclipse
 # Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
-def getWhenSolEclipseLoc(year=0, month=0, day=0):
-    if year == 0 & month == 0 & day == 0:
+def getWhenSolEclipse(year=None, month=None, day=None):
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
         day = now.day
     tjdut = swe.julday(year, month, day, 7, swe.GREG_CAL)
-    geopos = [-119.4960, 49.8880, 342.0]
-    retflags, tret, attr = swe.sol_eclipse_when_loc(
-        tjdut, geopos, swe.FLG_SWIEPH, False)
+    tret = swe.sol_eclipse_when_glob(tjdut)[1]
 
-    timeEclipseStart = swe.jdut1_to_utc(tret[1], swe.GREG_CAL)
-    timeEclipseEnd = swe.jdut1_to_utc(tret[4], swe.GREG_CAL)
+    timeEclipseStart = swe.jdut1_to_utc(tret[2], swe.GREG_CAL)
+    timeEclipseEnd = swe.jdut1_to_utc(tret[3], swe.GREG_CAL)
     timeEclipseMax = swe.jdut1_to_utc(tret[0], swe.GREG_CAL)
 
     # convert swisseph time to local time object
@@ -170,16 +176,14 @@ def getWhenSolEclipseLoc(year=0, month=0, day=0):
 
 # Gets string of data relating to time of Lunar eclipse
 # Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
-def getWhenLunEclipseLoc(year=0, month=0, day=0):
-    if year == 0 & month == 0 & day == 0:
+def getWhenLunEclipse(year=None, month=None, day=None):
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
         day = now.day
     tjdut = swe.julday(year, month, day, 7, swe.GREG_CAL)
-    geopos = [-119.4960, 49.8880, 342.0]
-    retflags, tret, attr = swe.lun_eclipse_when_loc(
-        tjdut, geopos, swe.FLG_SWIEPH, False)
+    tret = swe.lun_eclipse_when(tjdut)[1]
 
     timeEclipseStart = swe.jdut1_to_utc(tret[6], swe.GREG_CAL)
     timeEclipseEnd = swe.jdut1_to_utc(tret[7], swe.GREG_CAL)
@@ -196,44 +200,64 @@ def getWhenLunEclipseLoc(year=0, month=0, day=0):
     return (time_formatted_start, time_formatted_max, time_formatted_end, timeEclipseDuration)
 
 
-# calculates the moons current illumination
-def getMoonStatusHelper(year, month, day):
+# calculates the moons illumination
+def getMoonStatusHelper(year=None, month=None, day=None):
+    if (year == None) & (month == None) & (day == None):
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+
     jd = swe.julday(year, month, day)
     se_moon = 1
-    attr = swe.pheno_ut(jd, se_moon, 1)
+    attr = swe.pheno_ut(jd, se_moon, swe.FLG_SWIEPH)
     moon_percent = (attr[1] * 100)
     return moon_percent
 
 
 # uses getMoonStatusHelper to display current phases of the moon
-def getMoonStatus():
-    now = datetime.now()
-    moon_percent = getMoonStatusHelper(now.year, now.month, now.day)
-    next_day_percent = getMoonStatusHelper(now.year, now.month, now.day+1)
+def getMoonStatus(year=None, month=None, day=None):
+    if (year == None) & (month == None) & (day == None):
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+    moon_percent = getMoonStatusHelper(year, month, day)
+    next_day_percent = getMoonStatusHelper(year, month, day+1)
     moon_status = ""
-    if round(moon_percent) < 49:
+    moon_percent_rounded = round(moon_percent)
+    if moon_percent_rounded < 49:
         moon_status = " Crescent"
-    elif round(moon_percent) > 51:
-        moon_status = " Cibbous"
+    elif moon_percent_rounded > 51:
+        moon_status = " Gibbous"
 
     if moon_percent < next_day_percent:
         result = "Waxing" + moon_status
     elif moon_percent > next_day_percent:
-        result = "Wanning" + moon_status
-    elif round(moon_percent) == 100:
+        result = "Waning" + moon_status
+
+    if moon_percent_rounded == 100:
         result = "Full Moon"
-    elif round(moon_percent) == 49 or 50 or 51:
-        result = "Half Moon"
-    elif round(moon_percent) == 0:
+    elif moon_percent_rounded == 49 or moon_percent_rounded == 50 or moon_percent_rounded == 51:
+        if moon_percent < next_day_percent:
+            result = "First Quarter"
+        elif moon_percent > next_day_percent:
+            result = "Last Quarter"
+    elif moon_percent_rounded == 0:
         result = "New Moon"
 
-    moon_percent_rounded = round(moon_percent)
-    return result, "Illumination " + str(moon_percent_rounded) + "%"
+    return (result, moon_percent_rounded)
 
 
-def getVariableDayLength(year, month, day, amountOfDays):
+def getVariableDayLength(amountOfDays, year=None, month=None, day=None):
     """Return 2d array with amount of hours and minutes per day from current day to specified amount of days
     """
+    if (year == None) & (month == None) & (day == None):
+        now = datetime.now()
+        year = now.year
+        month = now.month
+        day = now.day
+
     amountOfDayLight = []
 
     for i in range(0, amountOfDays):
@@ -270,12 +294,12 @@ def getVariableDayLength(year, month, day, amountOfDays):
     return amountOfDayLight
 
 
-def getDateOfNextNewMoon(year=0, month=0, day=0):
+def getDateOfNextNewMoon(year: int = None, month: int = None, day: int = None):
     """Return the date of the next new moon.
     input/output in UTC time.
     Checks for the first day meeting the requirement for a new moon illumination level (~0%)
     Checks for dimmest hour and minute as well to correct for UTC time conversion."""
-    if year == 0 & month == 0 & day == 0:
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -305,31 +329,36 @@ def getDateOfNextNewMoon(year=0, month=0, day=0):
     min = swe.pheno_ut(tjd, swe.MOON)[1]
     temp = min
     hour = 0.0
+    low_hour = 0.0
     # Find the dimmest hour in that day
-    while (temp < min and hour < 23):
+    while (hour < 23):
         hour += 1.0
         tjd = swe.julday(year, month, day+daysCount, hour, swe.GREG_CAL)
         temp = swe.pheno_ut(tjd, swe.MOON)[1]
         if (temp < min):
             min = temp
+            low_hour = hour
 
     # Get the minute with the dimmest illumination
-    tjd = swe.julday(year, month, day+daysCount, hour, swe.GREG_CAL)
+    tjd = swe.julday(year, month, day+daysCount, low_hour, swe.GREG_CAL)
     min = swe.pheno_ut(tjd, swe.MOON)[1]
     temp = min
     minute = 0.0
+    low_minute = 0.0
     # Find the dimmest minute
-    while (temp < min):
+    while (minute < 1.0):
         minute += 0.017
-        tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
+        tjd = swe.julday(year, month, day+daysCount, low_hour+minute, swe.GREG_CAL)
         temp = swe.pheno_ut(tjd, swe.MOON)[1]
         if (temp < min):
             min = temp
+            low_minute = minute
 
-    tjd = swe.julday(year, month, day+daysCount, hour+minute, swe.GREG_CAL)
+    tjd = swe.julday(year, month, day+daysCount, low_hour+low_minute, swe.GREG_CAL)
     utc = swe.jdut1_to_utc(tjd, swe.GREG_CAL)
-    newMoon_year, newMoon_month, newMoon_day = utc[0], utc[1], utc[2]
-    return (newMoon_year, newMoon_month, newMoon_day)
+    newMoon_year, newMoon_month, newMoon_day, newMoon_hour, newMoon_minute, newMoon_second = utc[0], utc[1], utc[2], utc[3], utc[4], utc[5]
+    return (newMoon_year, newMoon_month, newMoon_day, newMoon_hour, newMoon_minute, newMoon_second)
+
 
 def getLocation(city, country):
     """
@@ -345,29 +374,31 @@ def getLocation(city, country):
     5: 'Latitude' as a float
     6: 'Longitude' as a float
     """
-    #Assigns database path/name to the variable
+    # Assigns database path/name to the variable
     database = "../AstroCal/resources/locations.db"
-    #Checks if the user has inputed England, Wales or Scotland, as the database saves them all as UK
-    #Ireland is a seperate entry from the other three countries
+    # Checks if the user has inputed England, Wales or Scotland, as the database saves them all as UK
+    # Ireland is a seperate entry from the other three countries
     if country == "England" or country == "Wales" or country == "Scotland":
         country = "United Kingdom"
-        
-    #Declares a connection to the database, None and the try and except are to minimize faulty calls
+
+    # Declares a connection to the database, None and the try and except are to minimize faulty calls
     conn = None
     try:
         conn = sqlite3.connect(database)
     except Error as e:
         print(e)
-    #Checks that the connection is properly established, creates a cursor and then uses it to run a query on the database
+    # Checks that the connection is properly established, creates a cursor and then uses it to run a query on the database
     with conn:
         cur = conn.cursor()
-        cur.execute("SELECT * FROM geonamesLocations WHERE city=? AND country=?", (city, country,))
-    #Gets the first row of the query and assigns it to 'row' and global variable 'location' before it is returned
+        cur.execute(
+            "SELECT * FROM geonamesLocations WHERE city=? AND country=?", (city, country,))
+    # Gets the first row of the query and assigns it to 'row' and global variable 'location' before it is returned
     row = cur.fetchone()
     global LOCATION
     LOCATION = row
     return row
-     
+
+
 def getLocationTest():
     """
     'Unit' tests as Fred, Mitchell and I discovered that trying to access a database from unit tests needs more work than it would be worth.
@@ -375,28 +406,35 @@ def getLocationTest():
 
     Function below commented out until needed. All tests pass at time of writing.
     """
-    #Prints a full row from the table
-    print((f"A full row of the locations table looks like: %s" % (getLocation("Madrid", "Spain"),)))
-    #Checks that the first item (City) returned is accurate
+    # Prints a full row from the table
+    print((f"A full row of the locations table looks like: %s" %
+          (getLocation("Madrid", "Spain"),)))
+    # Checks that the first item (City) returned is accurate
     if getLocation("Riyadh", "Saudi Arabia")[0] == "Riyadh":
-        print("City test for Riyadh, Saudi Arabia passed. City is " + getLocation("Riyadh", "Saudi Arabia")[0] + ".")
-    #Checks that the second item (Country) returned is accurate
+        print("City test for Riyadh, Saudi Arabia passed. City is " +
+              getLocation("Riyadh", "Saudi Arabia")[0] + ".")
+    # Checks that the second item (Country) returned is accurate
     if getLocation("Sydney", "Australia")[1] == "Australia":
-        print("Country test for Sydney, Australia passed. Country is " + getLocation("Sydney", "Australia")[1] + ".")
-    #Checks that the third item (Elevation) returned is accurate
+        print("Country test for Sydney, Australia passed. Country is " +
+              getLocation("Sydney", "Australia")[1] + ".")
+    # Checks that the third item (Elevation) returned is accurate
     if getLocation("Vancouver", "Canada")[2] == 70:
-        print("Elevation test for Vancouver, Canada passed. Elevation is " + str(getLocation("Vancouver", "Canada")[2]) + "m.")
-    #Checks that the fourth item (Timezone) returned is accurate
+        print("Elevation test for Vancouver, Canada passed. Elevation is " +
+              str(getLocation("Vancouver", "Canada")[2]) + "m.")
+    # Checks that the fourth item (Timezone) returned is accurate
     if getLocation("Rio de Janeiro", "Brazil")[3] == "America/Sao_Paulo":
-        print("Timezone test for Rio de Janeiro, Brazil passed. Timezone is " + getLocation("Rio de Janeiro", "Brazil")[3] + ".")
-    #Checks that the fifth item (Latitude) returned accurate
+        print("Timezone test for Rio de Janeiro, Brazil passed. Timezone is " +
+              getLocation("Rio de Janeiro", "Brazil")[3] + ".")
+    # Checks that the fifth item (Latitude) returned accurate
     if getLocation("Paris", "France")[4] == 48.8534:
-        print("Latitude test for Paris, France passed. Latitude is " + str(getLocation("Paris", "France")[4]) + ".")
-    #Checks that the fifth item (Longitude) returned accurate
+        print("Latitude test for Paris, France passed. Latitude is " +
+              str(getLocation("Paris", "France")[4]) + ".")
+    # Checks that the fifth item (Longitude) returned accurate
     if getLocation("Tokyo", "Japan")[5] == 139.6917:
-        print("Latitude test for Tokyo, Japan passed. Longitude is " + str(getLocation("Tokyo", "Japan")[5]) + ".")
-    #Checks that the global variable is being updated upon getLocation() call
+        print("Latitude test for Tokyo, Japan passed. Longitude is " +
+              str(getLocation("Tokyo", "Japan")[5]) + ".")
+    # Checks that the global variable is being updated upon getLocation() call
     if getLocation("New York", "United States") == LOCATION:
         print("Global variable test passed.")
 
-#getLocationTest() #Uncomment function to run test for the getLocation function
+# getLocationTest() #Uncomment function to run test for the getLocation function
