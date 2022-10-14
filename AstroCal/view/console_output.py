@@ -20,7 +20,7 @@ def main_menu(option=None):
     print('Main Menu')
     print('1. Sun Events')
     print('2. Moon Events')
-    print('3. View Month')
+    print('3. View Solar Month')
     print('4. Change Date\n')
     print('5. Exit \n')
     if option == None:
@@ -93,7 +93,7 @@ def sun_menu(option=None):
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 2:
         amountOfDays = getInputSanitized(
-            'Enter amount of days (up to 500). Default is 1 (enter): ', sun_menu, int, 0, 500, 1)
+            'Enter amount of days (up to 500). Default is 30 days (enter): ', sun_menu, int, 0, 500, 30)
         currentDay = DATE
         dayLengths = control.getVariableDayLength(
             amountOfDays, DATE.year, DATE.month, DATE.day)
