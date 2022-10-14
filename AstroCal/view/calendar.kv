@@ -10,190 +10,192 @@
 	Label: 
     	id: ms1 
 <CalGrid>:
-	rows: 9
-	padding: 10
-	spacing: 10
-	
-	
-	BoxLayout:
-		Button:
-			id: month_back
-			text: '<'
-			font_size: 40
-			size_hint: 0.3, 1
-			on_press: app.moveMonthBack()
-		Label:
-			id: month_label
-			text: app.getMonthName()
-			font_size: 40
-		Button:
-			id: month_forward
-			text: '>'
-			font_size: 40
-			size_hint: 0.3, 1
-			on_press: app.moveMonthForward()
-	BoxLayout:
-		spacing: 0
-	    Label:
-	    	text: app.getCurLocation()
-			font_size: 20
-	BoxLayout:
-		Label:
-			text: 'Su'
-			font_size: 40
-		Label:
-			text: 'Mo'
-			font_size: 40
-		Label:
-			text: 'Tu'
-			font_size: 40
-		Label:
-			text: 'We'
-			font_size: 40
-		Label:
-			text: 'Th'
-			font_size: 40
-		Label:
-			text: 'Fr'
-			font_size: 40
-		Label:
-			text: 'Sa'
-			font_size: 40
-	BoxLayout:
+	GridLayout:
+		size: root.width, root.height	
+		rows: 9
+		padding: 10
 		spacing: 10
-		Button:
-			id: b1
-			on_press: app.openDayView()
-		Button:
-			id: b2
-			on_press: app.openDayView()
-		Button:
-			id: b3
-			on_press: app.openDayView()
-		Button:
-			id: b4
-			on_press: app.openDayView()
-		Button:
-			id: b5
-			on_press: app.openDayView()
-		Button:
-			id: b6
-			on_press: app.openDayView()
-		Button:
-			id: b7
-			on_press: app.openDayView()
-	BoxLayout:
-		spacing: 10
-		Button:
-			id: b8
-			on_press: app.openDayView()
-		Button:
-			id: b9
-			on_press: app.openDayView()
-		Button:
-			id: b10
-			on_press: app.openDayView()
-		Button:
-			id: b11
-			on_press: app.openDayView()
-		Button:
-			id: b12
-			on_press: app.openDayView()
-		Button:
-			id: b13
-			on_press: app.openDayView()
-		Button:
-			id: b14
-			on_press: app.openDayView()
-	BoxLayout:
-		spacing: 10
-		Button:
-			id: b15
-			on_press: app.openDayView()
-		Button:
-			id: b16
-			on_press: app.openDayView()
-		Button:
-			id: b17
-			on_press: app.openDayView()
-		Button:
-			id: b18
-			on_press: app.openDayView()
-		Button:
-			id: b19
-			on_press: app.openDayView()
-		Button:
-			id: b20
-			on_press: app.openDayView()
-		Button:
-			id: b21
-			on_press: app.openDayView()
-	BoxLayout:
-		spacing: 10
-		Button:
-			id: b22
-			on_press: app.openDayView()
-		Button:
-			id: b23
-			on_press: app.openDayView()
-		Button:
-			id: b24
-			on_press: app.openDayView()
-		Button:
-			id: b25
-			on_press: app.openDayView()
-		Button:
-			id: b26
-			on_press: app.openDayView()
-		Button:
-			id: b27
-			on_press: app.openDayView()
-		Button:
-			id: b28
-			on_press: app.openDayView()
-	BoxLayout:
-		spacing: 10
-		Button:
-			id: b29
-			on_press: app.openDayView()
-		Button:
-			id: b30
-			on_press: app.openDayView()
-		Button:
-			id: b31
-			on_press: app.openDayView()
-		Button:
-			id: b32
-			on_press: app.openDayView()
-		Button:
-			id: b33
-			on_press: app.openDayView()
-		Button:
-			id: b34
-			on_press: app.openDayView()
-		Button:
-			id: b35
-			on_press: app.openDayView()
-	BoxLayout:
-		spacing: 10
-		Button:
-			id: b36
-			on_press: app.openDayView()
-		Button:
-			id: b37
-			on_press: app.openDayView()
-		Button:
-			id: b38
-			on_press: app.openDayView()
-		Button:
-			id: b39
-			on_press: app.openDayView()
-		Button:
-			id: b40
-			on_press: app.openDayView()
-		Button:
-			id: b41
-			on_press: app.openDayView()
-		Button:
-			id: b42
-			on_press: app.openDayView()
+		
+		
+		BoxLayout:
+			Button:
+				id: month_back
+				text: '<'
+				font_size: 40
+				size_hint: 0.3, 1
+				on_press: app.moveMonthBack()
+			Label:
+				id: month_label
+				text: app.getMonthName()
+				font_size: 40
+			Button:
+				id: month_forward
+				text: '>'
+				font_size: 40
+				size_hint: 0.3, 1
+				on_press: app.moveMonthForward()
+		BoxLayout:
+			spacing: 0
+			Label:
+				text: app.getCurLocation()
+				font_size: 20
+		BoxLayout:
+			Label:
+				text: 'Su'
+				font_size: 40
+			Label:
+				text: 'Mo'
+				font_size: 40
+			Label:
+				text: 'Tu'
+				font_size: 40
+			Label:
+				text: 'We'
+				font_size: 40
+			Label:
+				text: 'Th'
+				font_size: 40
+			Label:
+				text: 'Fr'
+				font_size: 40
+			Label:
+				text: 'Sa'
+				font_size: 40
+		BoxLayout:
+			spacing: 10
+			Button:
+				id: b1
+				on_press: app.openDayView()
+			Button:
+				id: b2
+				on_press: app.openDayView()
+			Button:
+				id: b3
+				on_press: app.openDayView()
+			Button:
+				id: b4
+				on_press: app.openDayView()
+			Button:
+				id: b5
+				on_press: app.openDayView()
+			Button:
+				id: b6
+				on_press: app.openDayView()
+			Button:
+				id: b7
+				on_press: app.openDayView()
+		BoxLayout:
+			spacing: 10
+			Button:
+				id: b8
+				on_press: app.openDayView()
+			Button:
+				id: b9
+				on_press: app.openDayView()
+			Button:
+				id: b10
+				on_press: app.openDayView()
+			Button:
+				id: b11
+				on_press: app.openDayView()
+			Button:
+				id: b12
+				on_press: app.openDayView()
+			Button:
+				id: b13
+				on_press: app.openDayView()
+			Button:
+				id: b14
+				on_press: app.openDayView()
+		BoxLayout:
+			spacing: 10
+			Button:
+				id: b15
+				on_press: app.openDayView()
+			Button:
+				id: b16
+				on_press: app.openDayView()
+			Button:
+				id: b17
+				on_press: app.openDayView()
+			Button:
+				id: b18
+				on_press: app.openDayView()
+			Button:
+				id: b19
+				on_press: app.openDayView()
+			Button:
+				id: b20
+				on_press: app.openDayView()
+			Button:
+				id: b21
+				on_press: app.openDayView()
+		BoxLayout:
+			spacing: 10
+			Button:
+				id: b22
+				on_press: app.openDayView()
+			Button:
+				id: b23
+				on_press: app.openDayView()
+			Button:
+				id: b24
+				on_press: app.openDayView()
+			Button:
+				id: b25
+				on_press: app.openDayView()
+			Button:
+				id: b26
+				on_press: app.openDayView()
+			Button:
+				id: b27
+				on_press: app.openDayView()
+			Button:
+				id: b28
+				on_press: app.openDayView()
+		BoxLayout:
+			spacing: 10
+			Button:
+				id: b29
+				on_press: app.openDayView()
+			Button:
+				id: b30
+				on_press: app.openDayView()
+			Button:
+				id: b31
+				on_press: app.openDayView()
+			Button:
+				id: b32
+				on_press: app.openDayView()
+			Button:
+				id: b33
+				on_press: app.openDayView()
+			Button:
+				id: b34
+				on_press: app.openDayView()
+			Button:
+				id: b35
+				on_press: app.openDayView()
+		BoxLayout:
+			spacing: 10
+			Button:
+				id: b36
+				on_press: app.openDayView()
+			Button:
+				id: b37
+				on_press: app.openDayView()
+			Button:
+				id: b38
+				on_press: app.openDayView()
+			Button:
+				id: b39
+				on_press: app.openDayView()
+			Button:
+				id: b40
+				on_press: app.openDayView()
+			Button:
+				id: b41
+				on_press: app.openDayView()
+			Button:
+				id: b42
+				on_press: app.openDayView()

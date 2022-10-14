@@ -33,22 +33,22 @@ def setUpDaysInMonth():
         else:
             return 28
 
-class CalGrid(GridLayout):
+class CalView(Widget):
     pass
 
 sm = ScreenManager()
 
 class CalendarApp(App):
     def build(self):
-        return CalGrid()
+        return CalView()
 
     def loadDays(self):
         startday = calendarStartDay()
-        buttons = list(self.ids.keys())
+        buttons = list(self.CalView.ids.keys())
         
         y = startday
         for x in range(1, setUpDaysInMonth() + 1):
-            self.ids[buttons[y + 1]].text = str(x) #populate buttons and show day numbers
+            self.CalView.ids[buttons[y + 1]].text = str(x) #populate buttons and show day numbers
             y += 1
 
     def getCurLocation(self):
@@ -65,10 +65,10 @@ class CalendarApp(App):
         global DATE
         DATE = DATE + relativedelta(months=-1)
         print(DATE.strftime("%B %Y"))
-        self.month_label = DATE.strftime("%B %Y")
+        self.month_label.text = DATE.strftime("%B %Y")
 
     def moveMonthForward(self):
         global DATE
         DATE = DATE + relativedelta(months=+1)
         print(DATE.strftime("%B %Y"))
-        self.month_label = DATE.strftime("%B %Y")
+        self.month_label.text = DATE.strftime("%B %Y")
