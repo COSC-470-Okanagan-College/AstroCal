@@ -3,7 +3,7 @@ ASTRO - Release Notes:
 1.5 (Sprint 5):
 	- Functionality added to change my location and have the data update
 	- Input sanitized
-	- Luncar calendar function added
+	- Lunar calendar function added
 	- Final Release launched
 	- Finishing touches added
 
