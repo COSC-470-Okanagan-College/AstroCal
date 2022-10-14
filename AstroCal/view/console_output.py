@@ -5,10 +5,12 @@ from datetime import datetime, timedelta
 import calendar
 from gettext import find
 from pickle import TRUE
+from xmlrpc.client import DateTime
 from AstroCal.control import control
 import sys
 from AstroCal.constants.globals import DATE, LAST_MENU_OPTION
 import os
+import pytz
 
 
 # Main Menu
@@ -21,8 +23,9 @@ def main_menu(option=None):
     print('1. Sun Events')
     print('2. Moon Events')
     print('3. View Solar Month')
-    print('4. Change Date\n')
-    print('5. Exit \n')
+    print('4. View Lunar Month')
+    print('5. Change Date\n')
+    print('6. Exit \n')
     if option == None:
         option = getInputSanitized('Enter selection: ', None, int)
         LAST_MENU_OPTION = option
@@ -39,11 +42,15 @@ def main_menu(option=None):
         input('Press enter to continue...')
         main_menu()
     elif option == 4:
+        getLunarMonth()
+        input('Press enter to continue...')
+        main_menu()
+    elif option == 5:
         DATE = getDateFromUser()
         print("\nNew Date: " + get_date_formatted(DATE))
         input('Press enter to continue...')
         main_menu()
-    elif option == 5:
+    elif option == 6:
         print('Bye')
         sys.exit(0)
     else:
@@ -244,6 +251,95 @@ def getMonth():
              " ") + (same_day if day == moon_set_day else "Moonset " + next_day),
         ))
 
+# Get Lunar Month
+def getLunarMonth():
+    """
+        Print out the lunar month.
+        Starts at the previous new moon and goes to the end of the current gregorian calendar month.
+    """
+    month = DATE.month
+    year = DATE.year
+    same_day = ""
+    next_day = "Next Day"
+
+    # Get previous new moon
+    curr_time = datetime(DATE.year, DATE.month, DATE.day)
+    # curr_time = datetime(2004, 11, 8)
+    start_month = curr_time.month
+
+    # Find the previous new moon. We'll start from the first of the lunar month.
+    buffer_days = timedelta(days=32)
+    while (curr_time.month == start_month):
+        earlier_fortnight = curr_time - buffer_days
+        previous_new_moon = control.getDateOfNextNewMoon(earlier_fortnight.year, earlier_fortnight.month, earlier_fortnight.day)
+        prev_new_date = datetime(previous_new_moon[0], previous_new_moon[1], previous_new_moon[2], previous_new_moon[3], previous_new_moon[4], int(previous_new_moon[5]), 0, pytz.utc)
+        curr_time = prev_new_date # - timedelta(hours=5)
+
+    # distance_to_current = curr_time - prev_new_date
+
+    # Get next new moon
+    next_new_moon = control.getDateOfNextNewMoon(curr_time.year, curr_time.month, curr_time.day+1)
+    next_new_moon_utc = datetime(next_new_moon[0], next_new_moon[1], next_new_moon[2], next_new_moon[3], next_new_moon[4], int(next_new_moon[5]), 0, pytz.utc)
+
+    # Get next full moon
+    next_full_moon = control.getDateOfNextFullMoon_UTC(curr_time.year, curr_time.month, curr_time.day+1)
+    next_full_moon_utc = datetime(next_full_moon[0], next_full_moon[1], next_full_moon[2], next_full_moon[3], next_full_moon[4], int(next_full_moon[5]), 0, pytz.utc)
+
+    curr_time = curr_time.astimezone(pytz.timezone('PST8PDT'))
+    lunar_day = 0;
+    fortnight_str = "Shukla paksha"
+
+    # Print Out headers
+    print("{:<20} | {:>9} | {:<14} | {:<8} | {:<8} | {:<20} | {:<8}".format(
+        "Date", "Lunar Day", "Fortnight", "Moonrise", "Moonset", "Moon Phase", "Day"))
+    # Print out info for each day in the month
+    delta = timedelta(hours=16)
+    while curr_time.month <= start_month:
+
+        # Fast forward to next moon set. This places us after any lunar event
+        hour_fraction = 0 if curr_time.minute == 0 else (60 / curr_time.minute)
+        result = control.getRiseSet(curr_time.year, curr_time.month, curr_time.day, 'MOON', 'SET', curr_time.hour + hour_fraction)
+        curr_time = datetime(result[0], result[1], result[2], result[3], result[4], 0, 0, pytz.utc)
+        lunar_day += 1
+
+        # Check if we've hit a full moon
+        if curr_time > next_full_moon_utc:
+            lunar_day = 1
+            next_full_moon = control.getDateOfNextFullMoon_UTC(curr_time.year, curr_time.month, curr_time.day+4)
+            next_full_moon_utc = datetime(next_full_moon[0], next_full_moon[1], next_full_moon[2], next_full_moon[3], next_full_moon[4], int(next_full_moon[5]), 0, pytz.utc)
+            fortnight_str = "Krishna paksha"
+        
+        ## Check if we've hit a new moon
+        elif curr_time > next_new_moon_utc:
+            lunar_day = 1
+            next_new_moon = control.getDateOfNextNewMoon(curr_time.year, curr_time.month, curr_time.day+4)
+            next_new_moon_utc = datetime(next_new_moon[0], next_new_moon[1], next_new_moon[2], next_new_moon[3], next_new_moon[4], int(next_new_moon[5]), 0, pytz.utc)
+            fortnight_str = "Shukla paksha"
+
+        
+        # Get regular moon events for the day
+        curr_time = curr_time.astimezone(pytz.timezone('PST8PDT'))
+        moon_rise_time, moon_rise_day = control.celestial_rise_or_set(
+            'MOON', 'RISE', curr_time.year, curr_time.month, curr_time.day)
+        moon_set_time, moon_set_day = control.celestial_rise_or_set(
+            'MOON', 'SET', curr_time.year, curr_time.month, curr_time.day)
+        moon_status, moon_illumin = control.getMoonStatus(curr_time.year, curr_time.month, curr_time.day)
+
+        # Since we start at the start of the lunar month, we need to check if we're in the current gregorian month
+        if curr_time.month == start_month:
+            print("{:<20} | {:>9} | {:<14} | {:<8} | {:<8} | {:<20} | {:<8}".format(
+                "{} {}, {}".format(curr_time.strftime("%B"), curr_time.day, curr_time.year),
+                str(lunar_day),
+                fortnight_str,
+                format_24hour_time_output(moon_rise_time),
+                format_24hour_time_output(moon_set_time),
+                str(moon_illumin) + "%, " + moon_status,
+                (same_day if curr_time.day == moon_rise_day else "Moonrise " + next_day +
+                " ") + (same_day if curr_time.day == moon_set_day else "Moonset " + next_day)
+            ))
+             
+        # Move to next lunar day
+        curr_time = curr_time + delta
 
 # Get current year, month, day
 def get_current_year_month_day():
