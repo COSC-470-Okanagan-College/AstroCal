@@ -17,20 +17,25 @@
 	
 	BoxLayout:
 		Button:
+			id: month_back
 			text: '<'
 			font_size: 40
 			size_hint: 0.3, 1
+			on_press: app.moveMonthBack()
 		Label:
 			id: month_label
+			text: app.getMonthName()
 			font_size: 40
 		Button:
+			id: month_forward
 			text: '>'
 			font_size: 40
 			size_hint: 0.3, 1
+			on_press: app.moveMonthForward()
 	BoxLayout:
 		spacing: 0
 	    Label:
-	    	text: 'Kelowna, Canada'
+	    	text: app.getCurLocation()
 			font_size: 20
 	BoxLayout:
 		Label:

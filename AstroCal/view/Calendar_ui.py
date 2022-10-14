@@ -1,9 +1,14 @@
 from kivy.app import App
-from kivy.uix.button import Button
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
 from datetime import datetime
 from datetime import time
+from AstroCal.constants.globals import DATE
+from AstroCal.constants.globals import LOCATION
+from dateutil.relativedelta import relativedelta
 
 def calendarStartDay(date=0):
     if date == 0 :
@@ -16,13 +21,12 @@ def calendarStartDay(date=0):
 
 
 def setUpDaysInMonth():
-    dates = datetime.now()
-    if dates.month in [1,3,5,7,8,10,12]:
+    if DATE.month in [1,3,5,7,8,10,12]:
         return 31
-    elif dates.month in [4,6,9,11]:
+    elif DATE.month in [4,6,9,11]:
         return 30
-    elif dates.month == 2:
-        yr = dates.year
+    elif DATE.month == 2:
+        yr = DATE.year
         if yr % 4 == 0 and (yr % 100 != 0 or yr % 400 == 0):
             return 29
         else:
@@ -31,22 +35,41 @@ def setUpDaysInMonth():
 class CalGrid(GridLayout):
     pass
 
+sm = ScreenManager()
 
 class CalendarApp(App):
     def build(self):
-        cg = CalGrid()
-        dates = datetime.now()
+        return CalGrid()
+
+    def loadDays(self):
         startday = calendarStartDay()
-
-        cg.ids['month_label'].text = dates.strftime("%B %Y") 
-
-        buttons = list(cg.ids.keys())
+        buttons = list(self.ids.keys())
         
         y = startday
         for x in range(1, setUpDaysInMonth() + 1):
-            cg.ids[buttons[y + 1]].text = str(x) #populate buttons and show day numbers
+            self.ids[buttons[y + 1]].text = str(x) #populate buttons and show day numbers
             y += 1
-        return cg
+
+    def getCurLocation(self):
+        return "Kelowna, Canada"
+        #return LOCATION
+
+    def getMonthName(self):
+        return DATE.strftime("%B %Y")
+
     def printToConsole(self):
         print("Clicked a Calendar day")
-    
+
+    def moveMonthBack(self):
+        global DATE
+        DATE = DATE + relativedelta(months=-1)
+        print(DATE.strftime("%B %Y"))
+        #self.ids['month_label'].text = DATE.strftime("%B %Y")
+        #self.ids.recycleview_id.refresh_from_data()
+
+    def moveMonthForward(self):
+        global DATE
+        DATE = DATE + relativedelta(months=+1)
+        print(DATE.strftime("%B %Y"))
+        #self.ids['month_label'].text = DATE.strftime("%B %Y")
+        #self.ids.recycleview_id.refresh_from_data()
