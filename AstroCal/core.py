@@ -1,20 +1,23 @@
 import AstroCal.view.console_output as console_output
 import sys
 
+from AstroCal.constants.globals import MODE
+
 
 def run_TUI():
     # Runs Console
+    global MODE
+    MODE = 'TUI'
     console_output.main_menu()
+
 
 def run_GUI():
     # Runs UI
+    global MODE
+    MODE = 'GUI'
     import AstroCal.view.Calendar_ui as calendar
     import AstroCal.view.home as home
     calendar.CalendarApp().run()
-
-
-
-
 
 
 if __name__ == "__main__":
