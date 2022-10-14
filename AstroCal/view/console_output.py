@@ -84,7 +84,7 @@ def sun_menu(option=None):
         print('Sun will Set : ' + format_24hour_time_output(sun_set_time) +
               " Days: " + str(sun_set_day))"""
     if option == 1:
-        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc(
+        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipse(
             DATE.year, DATE.month, DATE.day)
         print("Solar Eclipse:")
         print("\tStart:\t\t" + str(sol_eclipse_start))
@@ -162,7 +162,7 @@ def moon_menu(option=None):
         print('Moon will Set : ' + format_24hour_time_output(moon_set_time) +
               " Days: " + str(moon_set_day))"""
     if option == 1:
-        lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipseLoc(
+        lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipse(
             DATE.year, DATE.month, DATE.day)
         print("Lunar Eclipse:")
         print("\tStart:\t\t" + str(lun_eclipse_start))
