@@ -20,7 +20,7 @@ def main_menu(option=None):
     print('Main Menu')
     print('1. Sun Events')
     print('2. Moon Events')
-    print('3. View Month')
+    print('3. View Solar Month')
     print('4. Change Date\n')
     print('5. Exit \n')
     if option == None:
@@ -93,7 +93,7 @@ def sun_menu(option=None):
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 2:
         amountOfDays = getInputSanitized(
-            'Enter amount of days (up to 500). Default is 1 (enter): ', sun_menu, int, 0, 500, 1)
+            'Enter amount of days (up to 500). Default is 30 days (enter): ', sun_menu, int, 0, 500, 30)
         currentDay = DATE
         dayLengths = control.getVariableDayLength(
             amountOfDays, DATE.year, DATE.month, DATE.day)
@@ -229,7 +229,8 @@ def getMonth():
         moon_set_time, moon_set_day = control.celestial_rise_or_set(
             'MOON', 'SET', year, month, day)
         moon_status, moon_illumin = control.getMoonStatus(year, month, day)
-        date = "{} {}, {}".format(month_str, day, year)
+        day_name = datetime(year, month, day).strftime("%a")
+        date = "{} {} {}, {}".format(day_name, month_str, day, year)
 
         print("{:<20} | {:<8} | {:<8} | {:<8} | {:<8} | {:<20} | {:<8}".format(
             date,
