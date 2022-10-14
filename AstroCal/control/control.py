@@ -150,19 +150,17 @@ def getDaysTillFullMoon(timezone, year=0, month=0, day=0):
 
 # Gets string of data relating to time of solar eclipse
 # Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
-def getWhenSolEclipseLoc(year=None, month=None, day=None):
+def getWhenSolEclipse(year=None, month=None, day=None):
     if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
         day = now.day
     tjdut = swe.julday(year, month, day, 7, swe.GREG_CAL)
-    geopos = [-119.4960, 49.8880, 342.0]
-    retflags, tret, attr = swe.sol_eclipse_when_loc(
-        tjdut, geopos, swe.FLG_SWIEPH, False)
+    tret = swe.sol_eclipse_when_glob(tjdut)[1]
 
-    timeEclipseStart = swe.jdut1_to_utc(tret[1], swe.GREG_CAL)
-    timeEclipseEnd = swe.jdut1_to_utc(tret[4], swe.GREG_CAL)
+    timeEclipseStart = swe.jdut1_to_utc(tret[2], swe.GREG_CAL)
+    timeEclipseEnd = swe.jdut1_to_utc(tret[3], swe.GREG_CAL)
     timeEclipseMax = swe.jdut1_to_utc(tret[0], swe.GREG_CAL)
 
     # convert swisseph time to local time object
@@ -178,16 +176,14 @@ def getWhenSolEclipseLoc(year=None, month=None, day=None):
 
 # Gets string of data relating to time of Lunar eclipse
 # Returns tuple (start of eclipse, peak of eclipse, end of eclipse, duration of eclipse)
-def getWhenLunEclipseLoc(year=None, month=None, day=None):
+def getWhenLunEclipse(year=None, month=None, day=None):
     if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
         day = now.day
     tjdut = swe.julday(year, month, day, 7, swe.GREG_CAL)
-    geopos = [-119.4960, 49.8880, 342.0]
-    retflags, tret, attr = swe.lun_eclipse_when_loc(
-        tjdut, geopos, swe.FLG_SWIEPH, False)
+    tret = swe.lun_eclipse_when(tjdut)[1]
 
     timeEclipseStart = swe.jdut1_to_utc(tret[6], swe.GREG_CAL)
     timeEclipseEnd = swe.jdut1_to_utc(tret[7], swe.GREG_CAL)
