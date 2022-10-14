@@ -206,7 +206,7 @@ def getWhenLunEclipseLoc(year=None, month=None, day=None):
 
 # calculates the moons illumination
 def getMoonStatusHelper(year=None, month=None, day=None):
-    if year == None & month == None & day == None:
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -221,7 +221,7 @@ def getMoonStatusHelper(year=None, month=None, day=None):
 
 # uses getMoonStatusHelper to display current phases of the moon
 def getMoonStatus(year=None, month=None, day=None):
-    if year == None & month == None & day == None:
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
@@ -256,7 +256,7 @@ def getMoonStatus(year=None, month=None, day=None):
 def getVariableDayLength(amountOfDays, year=None, month=None, day=None):
     """Return 2d array with amount of hours and minutes per day from current day to specified amount of days
     """
-    if year == None & month == None & day == None:
+    if (year == None) & (month == None) & (day == None):
         now = datetime.now()
         year = now.year
         month = now.month
