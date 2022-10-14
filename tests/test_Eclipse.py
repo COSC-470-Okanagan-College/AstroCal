@@ -1,49 +1,49 @@
 from datetime import datetime, timedelta
 import unittest
-from AstroCal.control.control import getWhenSolEclipseLoc, getWhenLunEclipseLoc
+from AstroCal.control.control import getWhenSolEclipse, getWhenLunEclipse
 
 
 class TestEclipse(unittest.TestCase):
     def test_SolEcl_WhenSuccessful(self):
-        sol_eclipse_date_time_start, sol_eclipse_date_time_max, sol_eclipse_date_time_end, sol_eclipse_date_time_duration = getWhenSolEclipseLoc(
+        sol_eclipse_date_time_start, sol_eclipse_date_time_max, sol_eclipse_date_time_end, sol_eclipse_date_time_duration = getWhenSolEclipse(
             2022, 9, 27)
         self.assertEqual(sol_eclipse_date_time_start.year,
-                         2023, "Year Test Fail")
+                         2022, "Year Test Fail")
         self.assertEqual(sol_eclipse_date_time_start.month,
                          10, "Month Test Fail")
         self.assertEqual(sol_eclipse_date_time_start.day,
-                         14, "Day Test Fail")
+                         25, "Day Test Fail")
         self.assertEqual(sol_eclipse_date_time_start.hour,
-                         8, "Hour Start Test Fail")
+                         1, "Hour Start Test Fail")
         self.assertEqual(sol_eclipse_date_time_start.minute,
-                         10, "Minute Start Test Fail")
+                         58, "Minute Start Test Fail")
 
         self.assertEqual(sol_eclipse_date_time_max.hour,
-                         9, "Hour Max Test Fail")
+                         4, "Hour Max Test Fail")
         self.assertEqual(sol_eclipse_date_time_max.minute,
-                         22, "Minute Max Test Fail")
+                         0, "Minute Max Test Fail")
 
         self.assertEqual(sol_eclipse_date_time_end.hour,
-                         10, "Hour End Test Fail")
+                         6, "Hour End Test Fail")
         self.assertEqual(sol_eclipse_date_time_end.minute,
-                         41, "Minute End Test Fail")
+                         2, "Minute End Test Fail")
 
         self.assertEqual(sol_eclipse_date_time_duration,
-                         timedelta(hours=2, minutes=31), "Duration Test Fail")
+                         timedelta(hours=4, minutes=4), "Duration Test Fail")
 
     def test_SolEcl_WhenUnsuccessful(self):
-        sol_eclipse_date_time_start, sol_eclipse_date_time_max, sol_eclipse_date_time_end, sol_eclipse_date_time_duration = getWhenSolEclipseLoc(
+        sol_eclipse_date_time_start, sol_eclipse_date_time_max, sol_eclipse_date_time_end, sol_eclipse_date_time_duration = getWhenSolEclipse(
             2024, 9, 27)
         self.assertNotEqual(sol_eclipse_date_time_start.year,
                             2023, "Year Test Fail")
         self.assertNotEqual(sol_eclipse_date_time_start.month,
-                            10, "Month Test Fail")
+                            4, "Month Test Fail")
         self.assertNotEqual(sol_eclipse_date_time_start.day,
-                            14, "Day Test Fail")
+                            20, "Day Test Fail")
         self.assertNotEqual(sol_eclipse_date_time_start.hour,
-                            8, "Hour Start Test Fail")
+                            1, "Hour Start Test Fail")
         self.assertNotEqual(sol_eclipse_date_time_start.minute,
-                            10, "Minute Start Test Fail")
+                            34, "Minute Start Test Fail")
 
         self.assertNotEqual(sol_eclipse_date_time_max.hour,
                             10, "Hour Max Test Fail")
@@ -59,7 +59,7 @@ class TestEclipse(unittest.TestCase):
                             timedelta(hours=2, minutes=20), "Duration Test Fail")
 
     def test_LunEcl_WhenSuccessful(self):
-        lun_eclipse_date_time_start, lun_eclipse_date_time_max, lun_eclipse_date_time_end, lun_eclipse_date_time_duration = getWhenLunEclipseLoc(
+        lun_eclipse_date_time_start, lun_eclipse_date_time_max, lun_eclipse_date_time_end, lun_eclipse_date_time_duration = getWhenLunEclipse(
             2022, 9, 27)
         self.assertEqual(lun_eclipse_date_time_start.year,
                          2022, "Year Test Fail")
@@ -86,7 +86,7 @@ class TestEclipse(unittest.TestCase):
                          timedelta(hours=5, minutes=54), "Duration Test Fail")
 
     def test_LunEcl_WhenUnsuccessful(self):
-        lun_eclipse_date_time_start, lun_eclipse_date_time_max, lun_eclipse_date_time_end, lun_eclipse_date_time_duration = getWhenLunEclipseLoc(
+        lun_eclipse_date_time_start, lun_eclipse_date_time_max, lun_eclipse_date_time_end, lun_eclipse_date_time_duration = getWhenLunEclipse(
             2024, 9, 27)
         self.assertNotEqual(lun_eclipse_date_time_start.year,
                             2024, "Year Test Fail")

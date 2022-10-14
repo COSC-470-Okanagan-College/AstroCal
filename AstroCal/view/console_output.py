@@ -91,7 +91,7 @@ def sun_menu(option=None):
         print('Sun will Set : ' + format_24hour_time_output(sun_set_time) +
               " Days: " + str(sun_set_day))"""
     if option == 1:
-        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipseLoc(
+        sol_eclipse_start, sol_eclipse_max, sol_eclipse_end, sol_eclipse_duration = control.getWhenSolEclipse(
             DATE.year, DATE.month, DATE.day)
         print("Solar Eclipse:")
         print("\tStart:\t\t" + str(sol_eclipse_start))
@@ -100,7 +100,7 @@ def sun_menu(option=None):
         print("\tDuration:\t" + str(sol_eclipse_duration))
     elif option == 2:
         amountOfDays = getInputSanitized(
-            'Enter amount of days (up to 500). Default is 1 (enter): ', sun_menu, int, 0, 500, 1)
+            'Enter amount of days (up to 500). Default is 30 days (enter): ', sun_menu, int, 0, 500, 30)
         currentDay = DATE
         dayLengths = control.getVariableDayLength(
             amountOfDays, DATE.year, DATE.month, DATE.day)
@@ -169,7 +169,7 @@ def moon_menu(option=None):
         print('Moon will Set : ' + format_24hour_time_output(moon_set_time) +
               " Days: " + str(moon_set_day))"""
     if option == 1:
-        lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipseLoc(
+        lun_eclipse_start, lun_eclipse_max, lun_eclipse_end, lun_eclipse_duration = control.getWhenLunEclipse(
             DATE.year, DATE.month, DATE.day)
         print("Lunar Eclipse:")
         print("\tStart:\t\t" + str(lun_eclipse_start))
@@ -236,7 +236,8 @@ def getMonth():
         moon_set_time, moon_set_day = control.celestial_rise_or_set(
             'MOON', 'SET', year, month, day)
         moon_status, moon_illumin = control.getMoonStatus(year, month, day)
-        date = "{} {}, {}".format(month_str, day, year)
+        day_name = datetime(year, month, day).strftime("%a")
+        date = "{} {} {}, {}".format(day_name, month_str, day, year)
 
         print("{:<20} | {:<8} | {:<8} | {:<8} | {:<8} | {:<20} | {:<8}".format(
             date,
